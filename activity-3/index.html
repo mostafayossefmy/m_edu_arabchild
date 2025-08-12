@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لعبة الفقاعات لتعليم الحروف</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="splash-screen" class="screen active-screen">
+        <img src="images/logo.png" alt="شعار اللعبة" id="logo-animation" class="hidden">
+        <img src="images/splash_image.png" alt="مرحباً بك في لعبة الحروف" class="splash-image">
+        <button id="start-game-button" class="action-button hidden">ابدأ اللعب</button>
+    </div>
+
+    <div id="selection-screen" class="screen">
+        <h2>اختر <span id="selection-max-count-display">5 حروف</span> لتبدأ اللعب: <span id="level-display" class="level-color-1">(المستوى الأول)</span></h2>
+        <div class="letters-grid">
+            </div>
+        <button id="start-activity-button" class="action-button hidden">ابدأ النشاط</button>
+        <p class="selection-message">تم اختيار <span id="selected-count">0</span>/<span id="max-selection-text">5</span> حروف</p>
+    </div>
+
+    <div id="game-screen" class="screen">
+        <div class="game-container">
+            <h1>انقر على الحرف الصحيح!</h1>
+
+            <div class="progress-bar-container">
+                <div class="progress-bar">
+                </div>
+            </div>
+
+            <div class="bubble-area">
+                </div>
+
+            <div class="score-board">
+                <p>النقاط: <span id="score">0</span></p>
+                <div class="target-letter-display-container">
+                    <p>ابحث عن:</p>
+                    <div id="target-letter" class="target-letter-circle">أ</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="level-end-screen" class="screen">
+        <h2 class="reward-message">أحسنت! أكملت المستوى!</h2>
+        <div class="level-end-buttons">
+            <button id="play-again-button" class="action-button">مرة أخرى</button>
+            <button id="next-level-button" class="action-button">مستوى أعلى</button>
+        </div>
+    </div>
+
+    <div id="level-selection-menu" class="screen">
+        <div class="level-options-container">
+            <h2>اختر المستوى:</h2>
+            <div id="level-options" class="level-options">
+                </div>
+        </div>
+    </div>
+
+
+    <script src="script.js"></script>
+
+
+<!-- زر العودة الثابت في الزاوية العلوية اليمنى -->
+<a href="../../index.html" class="fixed-back-button">
+    <!-- مسار الصورة يرجع خطوتين للخلف إلى المجلد الرئيسي ثم مجلد images -->
+    <img src="../../images/home_back.png" alt="العودة إلى الصفحة الرئيسية">
+</a>
+
+
+
+</body>
+</html>
