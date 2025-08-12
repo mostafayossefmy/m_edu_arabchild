@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+    
+    <meta charset="UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لعبة بازل 4x4</title>
+    <style>
+        /* تنسيق الجسم والصفحة */
+        body {
+            font-family: Arial, sans-serif; /* نوع الخط المستخدم */
+            display: flex; /* استخدام Flexbox لتنظيم العناصر */
+            justify-content: center; /* توسيط العناصر أفقياً */
+            align-items: center; /* توسيط العناصر عمودياً */
+            flex-direction: column; /* ترتيب العناصر عمودياً */
+            height: 100vh; /* جعل ارتفاع الجسم يملأ الشاشة بالكامل */
+            margin: 0; /* إزالة الهوامش الافتراضية */
+            background-color: #f0f0f0; /* لون الخلفية */
+            overflow: hidden; /* منع ظهور شريط التمرير */
+            position: relative; /* لتحديد موقع البالونات */
+            background-image: url('images/bg_level3.png'); /* تعيين صورة الخلفية */
+            background-size: cover; /* جعل الخلفية تغطي الشاشة بالكامل */
+            background-repeat: no-repeat; /* منع تكرار الخلفية */
+        }
+
+        /* تنسيق العناوين والنصوص */
+        h1 {
+            color: #333; /* لون الخط */
+            margin-bottom: 20px; /* المسافة أسفل العنوان */
+            display: none; /* إخفاء العنوان */
+        }
+
+        p {
+            margin-bottom: 20px; /* المسافة أسفل النص */
+            color: #555; /* لون الخط */
+            display: none; /* إخفاء النص */
+        }
+
+        /* حاوية اللعبة الرئيسية */
+        .game-container {
+            display: flex; /* استخدام Flexbox */
+            flex-direction: column; /* ترتيب العناصر عمودياً */
+            align-items: center; /* توسيط العناصر أفقياً */
+            position: relative; /* لتحديد موقع العناصر الداخلية */
+            z-index: 10; /* ترتيب العنصر فوق العناصر الأخرى */
+        }
+
+        /* حاوية المربعات الأساسية (الحل) */
+        #solution-container {
+            display: grid; /* استخدام Grid لتنظيم المربعات */
+            grid-template-columns: repeat(4, 100px); /* 4 أعمدة بعرض 100 بكسل */
+            grid-template-rows: repeat(4, 100px); /* 4 صفوف بارتفاع 100 بكسل */
+            gap: 5px; /* المسافة بين المربعات */
+            border: 2px solid #ccc; /* إطار الحاوية */
+            padding: 5px; /* حشوة داخلية */
+            background-color: #fff; /* لون الخلفية */
+            min-height: 410px; /* الحد الأدنى للارتفاع */
+            z-index: 10; /* ترتيب العنصر فوق العناصر الأخرى */
+            margin-bottom: 20px; /* المسافة أسفل الحاوية */
+            transition: all 0.5s ease-in-out; /* تأثير التحول السلس */
+        }
+
+        /* تنسيق مربع الحل كصورة واحدة بعد الانتهاء */
+        #solution-container.solved {
+            display: block; /* عرض العنصر ككتلة */
+            width: 405px; /* عرض الصورة الكاملة */
+            height: 405px; /* ارتفاع الصورة الكاملة */
+            background-size: cover; /* جعل الخلفية تغطي المساحة */
+            background-position: center; /* توسيط الخلفية */
+        }
+
+        /* منطقة الإفلات (مربع فارغ) */
+        .drop-zone {
+            width: 100px; /* عرض المربع */
+            height: 100px; /* ارتفاع المربع */
+            background-color: #eee; /* لون الخلفية */
+            border: 2px dashed #999; /* إطار منقط */
+            display: flex; /* استخدام Flexbox */
+            justify-content: center; /* توسيط المحتوى أفقياً */
+            align-items: center; /* توسيط المحتوى عمودياً */
+            color: #999; /* لون النص */
+            font-size: 14px; /* حجم الخط */
+            box-sizing: border-box; /* احتساب الهامش والحدود ضمن الحجم */
+        }
+
+        .drop-zone.hovered {
+            background-color: #d0d0d0; /* لون الخلفية عند التحويم */
+            border-color: #333; /* لون الإطار عند التحويم */
+        }
+
+        .drop-zone .puzzle-piece {
+            border: none; /* إزالة إطار قطعة البازل داخل مربع الإفلات */
+            cursor: default; /* تغيير شكل المؤشر */
+        }
+
+        /* حاوية أجزاء الصورة (المربعات التي يتم سحبها) */
+        #puzzle-container {
+            display: grid; /* استخدام Grid لتنظيم المربعات */
+            grid-template-columns: repeat(4, 100px); /* 4 أعمدة بعرض 100 بكسل */
+            grid-template-rows: repeat(4, 100px); /* 4 صفوف بارتفاع 100 بكسل */
+            gap: 5px; /* المسافة بين المربعات */
+            border: 2px solid #ccc; /* إطار الحاوية */
+            padding: 5px; /* حشوة داخلية */
+            background-color: #fff; /* لون الخلفية */
+            min-height: 410px; /* الحد الأدنى للارتفاع */
+            transition: opacity 0.5s ease-in-out; /* تأثير التحول السلس */
+            z-index: 10; /* ترتيب العنصر فوق العناصر الأخرى */
+        }
+
+        /* إخفاء حاوية الأجزاء عند الانتهاء */
+        #puzzle-container.hidden {
+            opacity: 0; /* جعل العنصر شفافاً تماماً */
+            pointer-events: none; /* منع التفاعل مع العنصر */
+            height: 0; /* جعل الارتفاع صفراً */
+            padding: 0; /* إزالة الحشوة */
+            margin-top: 0; /* إزالة الهامش العلوي */
+        }
+
+        /* قطعة البازل (جزء من الصورة) */
+        .puzzle-piece {
+            width: 100px; /* عرض القطعة */
+            height: 100px; /* ارتفاع القطعة */
+            background-size: 400px 400px; /* حجم الصورة الأصلية للخلفية */
+            cursor: grab; /* تغيير شكل المؤشر */
+            border: 1px solid #ddd; /* إطار القطعة */
+            box-sizing: border-box; /* احتساب الهامش والحدود ضمن الحجم */
+            transition: transform 0.2s ease-in-out; /* تأثير التحول السلس */
+        }
+
+        .puzzle-piece.dragging {
+            opacity: 0.7; /* شفافية القطعة أثناء السحب */
+            border: 2px dashed #333; /* إطار منقط أثناء السحب */
+        }
+
+        /* رسالة الفوز */
+        #message {
+            position: absolute; /* وضع الرسالة في موضع مطلق */
+            top: 20px; /* المسافة من الأعلى */
+            font-size: 30px; /* حجم الخط */
+            font-weight: bold; /* جعل الخط عريضاً */
+            color: green; /* لون الخط */
+            z-index: 10; /* ترتيب العنصر فوق العناصر الأخرى */
+            text-align: center; /* توسيط النص */
+            width: 100%; /* عرض العنصر بنسبة 100% */
+        }
+
+        /* حاوية أيقونات التحكم (في الأسفل) */
+        #controls-container {
+            position: absolute; /* وضع الحاوية في موضع مطلق */
+            bottom: 20px; /* المسافة من الأسفل */
+            left: 50%; /* تحديد الموضع الأيسر بنسبة 50% */
+            transform: translateX(-50%); /* توسيط العنصر أفقياً */
+            display: flex; /* استخدام Flexbox */
+            gap: 30px; /* المسافة بين الأيقونات */
+            z-index: 15; /* ترتيب العنصر فوق العناصر الأخرى */
+            opacity: 0; /* جعل العنصر شفافاً */
+            pointer-events: none; /* منع التفاعل مع العنصر */
+            transition: opacity 0.5s ease-in-out; /* تأثير التحول السلس */
+        }
+
+        /* إظهار أيقونات التحكم عند اكتمال اللعبة */
+        #controls-container.visible {
+            opacity: 1; /* جعل العنصر مرئياً تماماً */
+            pointer-events: auto; /* السماح بالتفاعل مع العنصر */
+        }
+
+        /* أيقونة التحكم */
+        .control-icon {
+            cursor: pointer; /* تغيير شكل المؤشر عند التحويم */
+            width: 50px; /* عرض الأيقونة */
+            height: 50px; /* ارتفاع الأيقونة */
+            transition: transform 0.2s; /* تأثير التحول السلس */
+        }
+
+        .control-icon:hover {
+            transform: scale(1.1); /* تكبير الأيقونة عند التحويم */
+        }
+
+        /* البالونات */
+        .balloon {
+            position: fixed; /* وضع البالون في موضع ثابت */
+            width: 40px; /* عرض البالون */
+            height: 60px; /* ارتفاع البالون */
+            background-color: #ff4136; /* لون الخلفية */
+            border-radius: 50%; /* جعل العنصر دائرياً */
+            bottom: -80px; /* وضع البالون أسفل الشاشة */
+            z-index: 20; /* ترتيب العنصر فوق العناصر الأخرى */
+            box-shadow: inset -8px -8px 0 rgba(0, 0, 0, 0.2); /* إضافة ظل داخلي */
+            opacity: 0.8; /* شفافية البالون */
+            pointer-events: none; /* منع التفاعل مع العنصر */
+        }
+
+        .balloon:before {
+            content: ""; /* إضافة محتوى وهمي */
+            position: absolute; /* وضع المحتوى في موضع مطلق */
+            bottom: -5px; /* المسافة من الأسفل */
+            left: 50%; /* تحديد الموضع الأيسر بنسبة 50% */
+            transform: translateX(-50%); /* توسيط العنصر أفقياً */
+            width: 8px; /* عرض العنصر */
+            height: 8px; /* ارتفاع العنصر */
+            background-color: inherit; /* استخدام نفس لون الخلفية */
+            border-radius: 0 0 50% 50%; /* جعل الزوايا السفلية دائرية */
+            z-index: -1; /* وضع العنصر خلف البالون */
+        }
+
+        /* حركة البالونات */
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(5deg); /* الموضع الابتدائي */
+                opacity: 0.6; /* الشفافية الابتدائية */
+            }
+
+            50% {
+                transform: translateY(-150vh) rotate(-5deg); /* الموضع الأوسط */
+                opacity: 1; /* الشفافية المتوسطة */
+            }
+
+            100% {
+                transform: translateY(-300vh) rotate(10deg); /* الموضع النهائي */
+                opacity: 0.4; /* الشفافية النهائية */
+            }
+        }
+
+        /* ألوان ومواقع البالونات المختلفة */
+        .balloon:nth-child(odd) {
+            animation: float 3s ease-in-out infinite alternate; /* حركة البالونات الفردية */
+        }
+
+        .balloon:nth-child(even) {
+            animation: float 4s ease-in-out infinite alternate-reverse; /* حركة البالونات الزوجية */
+        }
+
+        .balloon:nth-child(3n+1) {
+            background-color: #ffc107; /* لون البالون */
+        }
+
+        .balloon:nth-child(3n+2) {
+            background-color: #007bff; /* لون البالون */
+        }
+
+        .balloon:nth-child(3n+3) {
+            background-color: #28a745; /* لون البالون */
+        }
+    </style>
+</head>
+
+<body>
+    <div id="controls-container">
+        <img src="images/home.png" alt="Home" class="control-icon" id="home-icon">
+        <img src="images/again.png" alt="Again" class="control-icon" id="again-icon">
+    </div>
+
+    <h1>لعبة بازل 4x4</h1>
+    <p>قم بسحب أجزاء الصورة إلى الأماكن الصحيحة.</p>
+    
+    <div class="game-container">
+        <div id="solution-container"></div>
+        <div id="puzzle-container"></div>
+    </div>
+    
+    <div id="message"></div>
+    
+    <audio id="correct-sound" src="sounds/correct.mp3"></audio>
+    <audio id="wrong-sound" src="sounds/wrong.mp3"></audio>
+    <audio id="bravoo-sound" src="sounds/bravoo.mp3"></audio>
+
+    
+    <script>
+        // هنا يبدأ كود JavaScript الخاص باللعبة
+        const IMAGE_COUNT_PER_LEVEL = 10; // عدد الصور المتاحة في هذا المستوى
+        const START_IMAGE_INDEX = 21; // رقم أول صورة في هذا المستوى
+        const END_IMAGE_INDEX = 30; // رقم آخر صورة في هذا المستوى
+        let availableImages = []; // مصفوفة لتخزين أرقام الصور المتاحة
+        let currentImageIndex; // فهرس الصورة الحالية
+
+        const puzzleContainer = document.getElementById('puzzle-container'); // حاوية قطع البازل
+        const solutionContainer = document.getElementById('solution-container'); // حاوية الحل
+        const message = document.getElementById('message'); // عنصر رسالة الفوز
+        const correctSound = document.getElementById('correct-sound'); // عنصر الصوت الصحيح
+        const wrongSound = document.getElementById('wrong-sound'); // عنصر الصوت الخاطئ
+        const bravooSound = document.getElementById('bravoo-sound'); // عنصر صوت الفوز
+        const controlsContainer = document.getElementById('controls-container'); // حاوية الأيقونات
+        const againIcon = document.getElementById('again-icon'); // أيقونة اللعب مرة أخرى
+        const homeIcon = document.getElementById('home-icon'); // أيقونة الرجوع للصفحة الرئيسية
+        const totalPieces = 16; // إجمالي عدد القطع (4x4)
+        let currentDrag = null; // القطعة التي يتم سحبها حالياً
+        let originalParent = null; // الحاوية الأصلية للقطعة
+
+        // دالة لإنشاء قائمة بالصور المتاحة
+        function initializeAvailableImages() {
+            availableImages = []; // إعادة تهيئة المصفوفة
+            for (let i = START_IMAGE_INDEX; i <= END_IMAGE_INDEX; i++) {
+                availableImages.push(i); // إضافة أرقام الصور إلى المصفوفة
+            }
+            shuffleArray(availableImages); // خلط ترتيب الصور
+        }
+
+        // دالة إنشاء اللعبة
+        function createPuzzle() {
+            puzzleContainer.innerHTML = ''; // تفريغ حاوية قطع البازل
+            solutionContainer.innerHTML = ''; // تفريغ حاوية الحل
+            message.textContent = ''; // إزالة رسالة الفوز
+            puzzleContainer.classList.remove('hidden'); // إظهار حاوية قطع البازل
+            solutionContainer.classList.remove('solved'); // إزالة حالة الحل من الحاوية
+            solutionContainer.style.backgroundImage = 'none'; // إزالة صورة الخلفية
+            controlsContainer.classList.remove('visible'); // إخفاء أيقونات التحكم
+            stopBalloons(); // إيقاف البالونات
+
+            if (availableImages.length === 0) {
+                initializeAvailableImages(); // إعادة تهيئة قائمة الصور إذا انتهت
+            }
+
+            currentImageIndex = availableImages.shift(); // اختيار أول صورة من القائمة وإزالتها
+            const imageSrc = `images/photo${currentImageIndex}.png`; // مسار الصورة
+            let pieces = []; // مصفوفة لتخزين قطع البازل
+
+            for (let i = 0; i < totalPieces; i++) {
+                const piece = document.createElement('div'); // إنشاء عنصر div لكل قطعة
+                piece.className = 'puzzle-piece'; // تعيين فئة CSS
+                piece.draggable = true; // جعل القطعة قابلة للسحب
+                piece.setAttribute('data-index', i); // تعيين فهرس القطعة
+
+                const row = Math.floor(i / 4); // حساب رقم الصف
+                const col = i % 4; // حساب رقم العمود
+                piece.style.backgroundImage = `url(${imageSrc})`; // تعيين صورة الخلفية
+                piece.style.backgroundPosition = `-${col * 100}px -${row * 100}px`; // تحديد موضع الجزء من الصورة
+                piece.style.backgroundSize = `400px 400px`; // تحديد حجم الصورة الأصلية
+
+                pieces.push(piece); // إضافة القطعة للمصفوفة
+            }
+
+            shuffleArray(pieces); // خلط ترتيب القطع
+            pieces.forEach(piece => puzzleContainer.appendChild(piece)); // إضافة القطع إلى حاوية البازل
+
+            for (let i = 0; i < totalPieces; i++) {
+                const dropZone = document.createElement('div'); // إنشاء عنصر div لكل مربع إفلات
+                dropZone.className = 'drop-zone'; // تعيين فئة CSS
+                dropZone.setAttribute('data-index', i); // تعيين فهرس مربع الإفلات
+                solutionContainer.appendChild(dropZone); // إضافة مربع الإفلات إلى حاوية الحل
+            }
+        }
+
+        // دالة خلط المصفوفة (Fisher-Yates shuffle)
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1)); // اختيار عنصر عشوائي
+                [array[i], array[j]] = [array[j], array[i]]; // تبديل العنصرين
+            }
+        }
+
+        // الاستماع لأحداث السحب والإفلات
+        puzzleContainer.addEventListener('dragstart', (e) => {
+            if (e.target.classList.contains('puzzle-piece')) {
+                currentDrag = e.target; // تخزين القطعة التي يتم سحبها
+                originalParent = e.target.parentElement; // تخزين الحاوية الأصلية
+                e.dataTransfer.setData('text/plain', e.target.dataset.index); // تعيين بيانات السحب
+                e.target.classList.add('dragging'); // إضافة فئة CSS أثناء السحب
+            }
+        });
+
+        puzzleContainer.addEventListener('dragend', (e) => {
+            if (e.target.classList.contains('puzzle-piece')) {
+                e.target.classList.remove('dragging'); // إزالة فئة CSS بعد انتهاء السحب
+            }
+        });
+
+        solutionContainer.addEventListener('dragover', (e) => {
+            e.preventDefault(); // منع السلوك الافتراضي للمتصفح
+            if (e.target.classList.contains('drop-zone') && e.target.children.length === 0) {
+                e.target.classList.add('hovered'); // إضافة فئة CSS عند التحويم
+            }
+        });
+
+        solutionContainer.addEventListener('dragleave', (e) => {
+            if (e.target.classList.contains('drop-zone')) {
+                e.target.classList.remove('hovered'); // إزالة فئة CSS عند مغادرة المربع
+            }
+        });
+
+        solutionContainer.addEventListener('drop', (e) => {
+            e.preventDefault(); // منع السلوك الافتراضي للمتصفح
+            if (e.target.classList.contains('drop-zone') && e.target.children.length === 0) {
+                const draggedIndex = currentDrag.dataset.index; // فهرس القطعة المسحوبة
+                const dropZoneIndex = e.target.dataset.index; // فهرس مربع الإفلات
+
+                e.target.classList.remove('hovered'); // إزالة فئة CSS بعد الإفلات
+
+                if (draggedIndex === dropZoneIndex) { // التحقق من تطابق الفهارس
+                    e.target.appendChild(currentDrag); // إضافة القطعة إلى مربع الإفلات
+                    currentDrag.draggable = false; // جعل القطعة غير قابلة للسحب مرة أخرى
+                    correctSound.play(); // تشغيل صوت الإجابة الصحيحة
+                    checkWinCondition(); // التحقق من حالة الفوز
+                } else {
+                    originalParent.appendChild(currentDrag); // إعادة القطعة إلى مكانها الأصلي
+                    wrongSound.play(); // تشغيل صوت الإجابة الخاطئة
+                }
+            }
+        });
+
+        // دالة التحقق من الفوز
+        function checkWinCondition() {
+            let allCorrect = true; // متغير للتحقق من جميع القطع
+            const dropZones = document.querySelectorAll('#solution-container .drop-zone'); // جميع مربعات الإفلات
+
+            dropZones.forEach(zone => {
+                // التحقق من أن المربع يحتوي على قطعة وأن فهرسها صحيح
+                if (zone.children.length === 0 || zone.children[0].dataset.index !== zone.dataset.index) {
+                    allCorrect = false; // إذا كان هناك خطأ، قم بتعيين المتغير إلى false
+                }
+            });
+
+            if (allCorrect) { // إذا كانت جميع القطع صحيحة
+                message.textContent = '🎉 تهانينا! لقد أتممت المهمة بنجاح 🎉'; // عرض رسالة الفوز
+                bravooSound.play(); // تشغيل صوت الاحتفال
+                showCompleteImage(); // عرض الصورة الكاملة
+                startBalloons(); // بدء تأثير البالونات
+                controlsContainer.classList.add('visible'); // إظهار أيقونات التحكم
+            }
+        }
+
+        // دالة عرض الصورة الكاملة
+        function showCompleteImage() {
+            puzzleContainer.classList.add('hidden'); // إخفاء حاوية قطع البازل
+            solutionContainer.innerHTML = ''; // تفريغ حاوية الحل
+            solutionContainer.classList.add('solved'); // إضافة فئة CSS لعرض الصورة الكاملة
+            solutionContainer.style.backgroundImage = `url(images/photo${currentImageIndex}.png)`; // تعيين الصورة كخلفية
+        }
+
+        // دالة بدء البالونات بشكل متناثر وجميل
+        function startBalloons() {
+            const numberOfBalloons = 50; // عدد البالونات
+            for (let i = 0; i < numberOfBalloons; i++) {
+                const balloon = document.createElement('div'); // إنشاء عنصر div لكل بالون
+                balloon.className = 'balloon'; // تعيين فئة CSS
+                balloon.style.left = `${Math.random() * 100}vw`; // تحديد موضع أفقي عشوائي
+                balloon.style.backgroundColor = getRandomColor(); // تعيين لون عشوائي
+                balloon.style.animationDelay = `${Math.random() * 2}s`; // تأخير عشوائي لبدء الحركة
+                balloon.style.animationDuration = `${3 + Math.random() * 3}s`; // مدة حركة عشوائية
+                document.body.appendChild(balloon); // إضافة البالون إلى الصفحة
+            }
+        }
+
+        // دالة للحصول على لون عشوائي للبالونات
+        function getRandomColor() {
+            const colors = ['#ff4136', '#ffc107', '#007bff', '#28a745', '#17a2b8', '#6f42c1', '#fd7e14', '#20c997', '#e83e8c']; // قائمة الألوان
+            return colors[Math.floor(Math.random() * colors.length)]; // اختيار لون عشوائي
+        }
+
+        // دالة إيقاف البالونات
+        function stopBalloons() {
+            document.querySelectorAll('.balloon').forEach(balloon => balloon.remove()); // إزالة جميع عناصر البالون
+        }
+
+        // معالجة النقر على أيقونات التحكم
+        againIcon.addEventListener('click', () => {
+            createPuzzle(); // إعادة تشغيل اللعبة
+        });
+
+        homeIcon.addEventListener('click', () => {
+            window.location.href = 'levels.html'; // الانتقال إلى صفحة المستويات
+        });
+
+        // عند تحميل الصفحة
+        window.onload = () => {
+            initializeAvailableImages(); // تهيئة قائمة الصور
+            createPuzzle(); // بدء اللعبة
+        };
+    </script>
+</body>
+
+</html>

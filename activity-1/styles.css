@@ -1,0 +1,160 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0;
+}
+
+.container {
+    width: 550px;
+    height: 600px;
+    border: 5px solid blue;
+    position: relative;
+    overflow: hidden;
+    background-color: white;
+}
+
+.icon {
+    width: 50px;
+    height: 50px;
+    background-color: lightblue;
+    color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    font-size: 18px;
+    font-weight: bold;
+    position: absolute;
+    cursor: pointer;
+    z-index: 1;
+    transition: transform 0.2s ease;
+}
+
+.icon:hover {
+    transform: scale(1.2);
+    background-color: #87cefa;
+}
+
+#bravoText {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+    font-weight: bold;
+    color: green;
+    z-index: 10;
+    display: none;
+    /* إخفاء النص مبدئيًا*/
+}
+
+#errorText {
+    position: absolute;
+    top: 48%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 22px;
+    font-weight: bold;
+    color: red;
+    z-index: 10;
+    display: none;
+}
+
+#nextButton {
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: blue;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 10;
+    display: none;
+    /* إخفاء الزر مبدئيًا */
+}
+
+#nextButton:hover {
+    background-color: darkblue;
+}
+
+.back-button {
+    display: inline-block;
+    margin-top: 30px;
+    padding: 12px 25px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #fff;
+    background-color: #007bff;
+    border-radius: 50px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.4);
+}
+
+.back-button:hover {
+    background-color: #0056b3;
+    box-shadow: 0 8px 20px rgba(0, 123, 255, 0.6);
+    transform: translateY(-2px);
+}
+
+
+.hidden {
+    display: none;
+}
+
+/* ========================================= */
+/* =  تصميم زر العودة الثابت بالصورة  = */
+/* ========================================= */
+
+.fixed-back-button {
+    /* يجعل الزر ثابتًا في مكانه */
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10000;
+    
+    /* يزيل الخلفية الزرقاء بالكامل */
+    background: none;
+    background-color: transparent;
+    
+    /* يضبط حجم العنصر الرئيسي نفسه */
+    width: 60px;
+    height: 60px;
+    
+    /* يزيل أي زخرفة للنص */
+    text-decoration: none;
+    
+    /* يضيف تأثيرات الانيميشن */
+    transition: transform 0.3s ease;
+    cursor: pointer;
+    border: none;
+    padding: 0;
+}
+
+.fixed-back-button:hover {
+    transform: scale(1.1); /* يكبر حجم الزر قليلاً عند مرور الماوس */
+}
+
+.fixed-back-button img {
+    /* يضبط حجم الصورة لتملأ الزر بالكامل */
+    width: 100%;
+    height: 100%;
+    
+    /* يجعل الصورة دائرية */
+    border-radius: 50%;
+    
+    /* يضمن أن الصورة تبدو جيدة داخل الزر */
+    object-fit: cover;
+    
+    /* يضيف ظل خفيف للصورة */
+    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.4);
+}

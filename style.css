@@ -1,0 +1,634 @@
+/*
+  ==============================================
+  =               إعدادات عامة                 =
+  ==============================================
+*/
+
+/* إعدادات عامة لجميع العناصر - تقوم بإزالة الهوامش والمسافات الداخلية الافتراضية */
+* {
+    margin: 0; /* إزالة الهوامش الخارجية الافتراضية */
+    padding: 0; /* إزالة المسافات الداخلية الافتراضية */
+    box-sizing: border-box; /* يجعل العرض والارتفاع يشمل الحشوة والحدود */
+}
+
+/* إعدادات الجسم الرئيسي للصفحة */
+body {
+    font-family: 'Cairo', Arial, sans-serif; /* تحديد الخط الرئيسي للصفحة */
+    direction: rtl; /* اتجاه النص من اليمين لليسار */
+    text-align: right; /* محاذاة النص لليمين افتراضياً */
+    background: linear-gradient(135deg, #87CEEB 0%, #4682B4 100%); /* تدرج لوني للخلفية */
+    min-height: 100vh; /* يجعل ارتفاع الجسم يملأ الشاشة بالكامل */
+    overflow-x: hidden; /* يمنع ظهور شريط التمرير الأفقي */
+    display: flex; /* لترتيب العناصر عمودياً */
+    flex-direction: column; /* ترتيب العناصر عمودياً */
+}
+
+/*
+  ==============================================
+  =               رأس الصفحة (Header)           =
+  ==============================================
+*/
+
+/* تصميم رأس الصفحة الرئيسي - تم تعديل الهوامش والحدود ليمتد على كامل العرض */
+.main-header {
+    background: linear-gradient(135deg, #E6F3FF 0%, #B8E0FF 100%); /* تدرج لوني للخلفية */
+    border: 3px solid #4A90E2; /* حدود حول الترويسة */
+    border-radius: 20px; /* زوايا مستديرة */
+    margin: 10px; /* هامش خارجي حول الرأس */
+    padding: 15px; /* مسافة داخلية */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15); /* ظل للترويسة */
+}
+
+/* الحاوية الرئيسية لعناصر رأس الصفحة - تم إزالة أقصى عرض لتملأ المساحة المتاحة */
+.header-container {
+    display: flex; /* استخدام فليكس بوكس لترتيب العناصر */
+    flex-wrap: nowrap; /* لا تسمح بالالتفاف على الديسك توب */
+    justify-content: space-between; /* توزيع العناصر على الأطراف */
+    align-items: center; /* محاذاة العناصر رأسياً في المنتصف */
+    max-width: 1200px; /* أقصى عرض للحاوية - **تم إزالته لتجنب المسافات الفارغة** */
+    margin: 0 auto; /* توسيط الحاوية أفقياً */
+    gap: 20px; /* مسافة بين العناصر */
+}
+
+/* تصميم قسم الشعار */
+.logo-section {
+    display: flex; /* استخدام فليكس بوكس */
+    align-items: center; /* محاذاة رأسية في المنتصف */
+    order: 1; /* ترتيب ظهور العنصر في الفليكس كونتينر */
+    flex-shrink: 0; /* يمنع تقليص العنصر */
+}
+
+/* الدائرة الخاصة بالشعار */
+.logo-circle {
+    width: 70px; /* عرض الدائرة */
+    height: 70px; /* ارتفاع الدائرة */
+    background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%); /* تدرج لوني للخلفية */
+    border-radius: 50%; /* لجعلها دائرة كاملة */
+    display: flex; /* استخدام فليكس بوكس لتوسيط المحتوى */
+    align-items: center; /* محاذاة رأسية */
+    justify-content: center; /* محاذاة أفقية */
+    border: 3px solid #E55A2B; /* حدود حول الدائرة */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* ظل للدائرة */
+}
+
+/* صورة الشعار */
+.logo-img {
+    width: 100%; /* تأخذ كامل عرض العنصر الأب */
+    height: 100%; /* تأخذ كامل ارتفاع العنصر الأب */
+    object-fit: cover; /* لملء المساحة مع الحفاظ على الأبعاد */
+    border-radius: 50%; /* لجعل الصورة دائرية */
+}
+
+/* تصميم شريط التنقل */
+.navigation-bar {
+    display: flex; /* استخدام فليكس بوكس */
+    align-items: center; /* محاذاة العناصر رأسياً */
+    gap: 10px; /* مسافة بين العناصر */
+    order: 2; /* ترتيب ظهور العنصر */
+    flex-shrink: 1; /* يسمح بتقليص العنصر */
+}
+
+/* حاوية أيقونات التنقل */
+.nav-icons {
+    display: flex; /* استخدام فليكس بوكس */
+    gap: 8px; /* مسافة بين الأيقونات */
+    flex-wrap: nowrap; /* يمنع التفاف الأيقونات */
+}
+
+/* حاوية كل أيقونة وقائمة منسدلة */
+.nav-icon-item {
+    position: relative; /* لتحديد موضع القائمة المنسدلة */
+    flex-shrink: 0; /* يمنع تقليص العنصر */
+}
+
+/* تصميم أزرار أيقونات التنقل */
+.nav-icon-btn {
+    background: none; /* خلفية شفافة */
+    border: none; /* إزالة الحدود */
+    font-size: 24px; /* حجم الأيقونة */
+    color: #4A90E2; /* لون الأيقونة */
+    cursor: pointer; /* تغيير شكل المؤشر */
+    transition: transform 0.3s ease; /* تأثير انتقالي سلس */
+    padding: 8px; /* مسافة داخلية */
+    border-radius: 50%; /* لجعل الزر دائرياً */
+}
+
+/* تأثير عند التمرير على أزرار الأيقونات */
+.nav-icon-btn:hover {
+    background-color: rgba(74, 144, 226, 0.1); /* خلفية خفيفة عند التمرير */
+    transform: scale(1.1); /* تكبير الأيقونة */
+}
+
+/* تصميم القوائم المنسدلة */
+.dropdown-menu {
+    position: absolute; /* تحديد الموضع المطلق */
+    top: calc(100% + 5px); /* وضع القائمة أسفل الزر بمسافة 5 بكسل */
+    right: 0; /* محاذاتها لليمين */
+    background: white; /* لون خلفية القائمة */
+    border: 2px solid #4A90E2; /* حدود حول القائمة */
+    border-radius: 10px; /* زوايا مستديرة */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* ظل للقائمة */
+    min-width: 150px; /* أدنى عرض للقائمة */
+    z-index: 1000; /* ترتيب ظهور العنصر فوق العناصر الأخرى */
+    opacity: 0; /* جعلها شفافة تماماً (مخفية) */
+    visibility: hidden; /* جعلها غير مرئية للمستخدم */
+    transform: translateY(-10px); /* تحريكها للأعلى قليلاً */
+    transition: all 0.3s ease; /* تأثير انتقالي سلس */
+    text-align: right; /* محاذاة النص لليمين */
+    padding: 5px 0; /* مسافة داخلية عمودية */
+}
+
+/* إظهار القائمة المنسدلة عند إضافة فئة active */
+.dropdown-menu.active {
+    opacity: 1; /* جعلها مرئية تماماً */
+    visibility: visible; /* جعلها ظاهرة */
+    transform: translateY(0); /* إعادتها لموضعها الأصلي */
+}
+
+/* عناصر القائمة المنسدلة (روابط) */
+.dropdown-item {
+    padding: 10px 15px; /* مسافة داخلية للروابط */
+    cursor: pointer; /* تغيير شكل المؤشر */
+    transition: background 0.2s ease; /* تأثير انتقالي للخلفية */
+    font-size: 14px; /* حجم الخط */
+    color: #2C3E50; /* لون الخط */
+    display: block; /* لجعل الرابط يملأ السطر بالكامل */
+    text-decoration: none; /* إزالة الخط تحت الرابط */
+}
+
+/* تأثير عند التمرير على عناصر القائمة */
+.dropdown-item:hover {
+    background: #F0F8FF; /* لون خلفية عند التمرير */
+}
+
+/* تصميم قسم البحث */
+.search-section {
+    display: flex; /* استخدام فليكس بوكس */
+    align-items: center; /* محاذاة رأسية في المنتصف */
+    background: #87CEEB; /* لون خلفية قسم البحث */
+    border-radius: 15px; /* زوايا مستديرة */
+    padding: 8px; /* مسافة داخلية */
+    border: 2px solid #4A90E2; /* حدود حول القسم */
+    min-width: 200px; /* أدنى عرض للقسم */
+    max-width: 300px; /* أقصى عرض للقسم */
+    flex-shrink: 1; /* يسمح بتقليص العنصر */
+    flex-grow: 1; /* يسمح بتمدد العنصر */
+    flex-direction: row; /* ترتيب العناصر أفقياً */
+    order: 3; /* ترتيب ظهور العنصر */
+}
+
+/* حقل إدخال البحث */
+.search-input {
+    background: transparent; /* خلفية شفافة */
+    border: none; /* إزالة الحدود */
+    outline: none; /* إزالة الإطار عند التركيز */
+    padding: 8px 15px; /* مسافة داخلية */
+    font-size: 16px; /* حجم الخط */
+    color: #2C3E50; /* لون الخط */
+    font-family: 'Cairo', Arial, sans-serif; /* خط حقل الإدخال */
+    flex: 1; /* يسمح للحقل بالتمدد */
+    min-width: 0; /* يمنع الحقل من تجاوز عرضه */
+    text-align: right; /* محاذاة النص لليمين */
+}
+
+/* نص البحث الافتراضي (placeholder) */
+.search-input::placeholder {
+    color: #5A6C7D; /* لون النص الافتراضي */
+    font-weight: 500; /* سمك الخط */
+}
+
+/* زر البحث */
+.search-button {
+    background: #4A90E2; /* لون خلفية الزر */
+    border: none; /* إزالة الحدود */
+    border-radius: 10px; /* زوايا مستديرة */
+    padding: 8px; /* مسافة داخلية */
+    cursor: pointer; /* تغيير شكل المؤشر */
+    color: white; /* لون أيقونة الزر */
+    transition: all 0.3s ease; /* تأثير انتقالي سلس */
+    flex-shrink: 0; /* يمنع تقليص الزر */
+}
+
+/* تأثير عند التمرير على زر البحث */
+.search-button:hover {
+    background: #357ABD; /* لون خلفية عند التمرير */
+    transform: scale(1.05); /* تكبير بسيط للزر */
+}
+
+/*
+  ==============================================
+  =           تصميم المحتوى الرئيسي             =
+  ==============================================
+*/
+
+/* حاوية المحتوى الرئيسي */
+.main-content {
+    max-width: 1200px; /* أقصى عرض للمحتوى */
+    margin: 0 auto; /* توسيط المحتوى أفقياً */
+    padding: 20px; /* مسافة داخلية */
+    flex-grow: 1; /* يسمح للمحتوى بالتمدد ليأخذ المساحة المتبقية */
+}
+
+/*
+  ==============================================
+  =               قسم الألعاب                   =
+  ==============================================
+*/
+
+/* قسم الألعاب مع الشخصيات */
+.games-section {
+    margin-bottom: 30px; /* هامش سفلي */
+}
+
+/* خلفية قسم الألعاب */
+.games-background {
+    background: none; /* تمت إزالة خلفية البار */
+    height: auto; /* ارتفاع تلقائي ليتكيف مع الصورة */
+    position: relative; /* لتحديد موضع الشخصيات بداخله */
+    overflow: hidden; /* لإخفاء أي عناصر خارج الحدود */
+    border: none; /* تمت إزالة حدود البار */
+    box-shadow: none; /* تمت إزالة ظل البار */
+    padding: 0; /* تم تعديل هذا السطر: إزالة المسافة الداخلية التي كانت تسبب الفراغات */
+    display: flex; /* استخدام فليكس بوكس لتوسيط المحتوى */
+    justify-content: center; /* توسيط المحتوى أفقياً */
+    align-items: center; /* توسيط المحتوى رأسياً */
+}
+
+/* حاوية شعار الألعاب */
+.games-logo {
+    display: flex; /* استخدام فليكس بوكس */
+    justify-content: center; /* لتوسيط الصورة أفقياً */
+    align-items: center; /* لتوسيط الصورة رأسياً */
+    width: 100%; /* تأخذ كامل العرض */
+}
+
+/* تنسيق شعار الألعاب المتحرك */
+.games-gif-logo {
+    width: auto; /* عرض تلقائي */
+    height: auto; /* ارتفاع تلقائي */
+    max-width: 100%; /* الحد الأقصى للعرض هو 100% من الحاوية */
+    max-height: 150px; /* الحد الأقصى للارتفاع */
+    display: block; /* لجعل الصورة عنصر كتلوي */
+    margin: 0; /* تم تعديل هذا السطر: إزالة الهوامش التي كانت تسبب الفراغات */
+}
+
+/* تنسيق الشخصيات الكرتونية */
+.character {
+    display: none; /* إخفاء الشخصيات مؤقتاً لتبسيط التصميم */
+}
+
+/*
+  ==============================================
+  =          قسم الأنشطة (Carousel)            =
+  ==============================================
+*/
+
+/* قسم الأنشطة التعليمية مع نظام التمرير */
+.activities-section {
+    background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%); /* تدرج لوني للخلفية */
+    border-radius: 20px; /* زوايا مستديرة */
+    padding: 20px; /* مسافة داخلية */
+    margin-bottom: 30px; /* هامش سفلي */
+    border: 3px solid #E55A2B; /* حدود حول القسم */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15); /* ظل للقسم */
+}
+
+/* عنوان الأقسام */
+.section-title {
+    color: white; /* لون الخط */
+    font-size: 32px; /* حجم الخط */
+    font-weight: 700; /* سمك الخط */
+    text-align: center; /* توسيط النص */
+    margin-bottom: 20px; /* هامش سفلي */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* ظل للنص */
+    letter-spacing: 1px; /* مسافة بين الحروف */
+}
+
+/* حاوية نظام تمرير الصور */
+.image-carousel-container {
+    position: relative; /* لتحديد موضع الأسهم بداخله */
+    display: flex; /* استخدام فليكس بوكس */
+    align-items: center; /* محاذاة رأسية */
+    flex-direction: row-reverse; /* ترتيب العناصر من اليمين لليسار */
+    gap: 10px; /* مسافة بين العناصر */
+}
+
+/* منطقة عرض الصور */
+.image-carousel-wrapper {
+    flex: 1; /* يسمح للرابر بالتمدد */
+    overflow: hidden; /* لإخفاء أي صور خارج نطاق العرض */
+    border-radius: 10px; /* زوايا مستديرة */
+    margin: 0 5px; /* هامش أفقي */
+}
+
+/* حاوية الصور القابلة للتمرير */
+.image-carousel {
+    display: flex; /* استخدام فليكس بوكس */
+    flex-direction: row; /* ترتيب الصور أفقياً */
+    gap: 15px; /* مسافة بين الصور */
+    transition: transform 0.5s ease; /* تأثير انتقالي للحركة */
+    padding: 10px 0; /* مسافة داخلية عمودية */
+    justify-content: flex-end; /* بدء ترتيب الصور من اليمين */
+    flex-wrap: nowrap; /* يمنع التفاف الصور */
+}
+
+/* تصميم حاوية كل صورة في الكاروسيل */
+.carousel-image-container {
+    flex-shrink: 0; /* يمنع تقليص حاوية الصورة */
+    width: 300px; /* العرض المطلوب للصورة */
+    height: 250px; /* الارتفاع المطلوب للصورة */
+    border: none; /* إزالة الحدود */
+    border-radius: 0; /* إزالة الزوايا المستديرة */
+    overflow: hidden; /* لإخفاء أي جزء من الصورة يخرج عن الحدود */
+    background-color: transparent; /* إزالة لون الخلفية */
+    display: flex; /* استخدام فليكس بوكس لتوسيط الصورة */
+    justify-content: center; /* توسيط أفقي */
+    align-items: center; /* توسيط رأسي */
+}
+
+/* تصميم الصور داخل الكاروسيل */
+.carousel-image-container img {
+    width: 100%; /* تأخذ كامل عرض العنصر الأب */
+    height: 100%; /* تأخذ كامل ارتفاع العنصر الأب */
+    object-fit: contain; /* لعرض الصورة كاملة داخل الحدود */
+    display: block; /* لجعل الصورة عنصر كتلوي */
+}
+
+/* أزرار التمرير (الأسهم) */
+.image-carousel-container .carousel-arrow {
+    background: rgba(255, 255, 255, 0.8); /* خلفية بيضاء نصف شفافة */
+    border: 2px solid #4A90E2; /* حدود حول الزر */
+    border-radius: 50%; /* لجعل الزر دائرياً */
+    width: 35px; /* عرض الزر */
+    height: 35px; /* ارتفاع الزر */
+    display: flex; /* استخدام فليكس بوكس لتوسيط الأيقونة */
+    align-items: center; /* محاذاة رأسية */
+    justify-content: center; /* محاذاة أفقية */
+    cursor: pointer; /* تغيير شكل المؤشر */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* ظل للزر */
+    transition: all 0.3s ease; /* تأثير انتقالي سلس */
+    color: #4A90E2; /* لون أيقونة السهم */
+    font-size: 18px; /* حجم أيقونة السهم */
+    flex-shrink: 0; /* يمنع تقليص الزر */
+}
+
+/* تأثير عند التمرير على الأسهم */
+.image-carousel-container .carousel-arrow:hover {
+    background: #4A90E2; /* لون خلفية عند التمرير */
+    color: white; /* لون أيقونة عند التمرير */
+    transform: scale(1.1); /* تكبير بسيط للزر */
+}
+
+/*
+  ==============================================
+  =            قسم الخدمات (Fixed)              =
+  ==============================================
+*/
+
+/* قسم الخدمات العامة مع الصور الثابتة */
+.services-section {
+    background: linear-gradient(135deg, #87CEEB 0%, #4682B4 100%); /* تدرج لوني للخلفية */
+    border-radius: 20px; /* زوايا مستديرة */
+    padding: 20px; /* مسافة داخلية */
+    margin-bottom: 30px; /* هامش سفلي */
+    border: 3px solid #4A90E2; /* حدود حول القسم */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15); /* ظل للقسم */
+}
+
+/* حاوية الصور الثابتة */
+.fixed-images-container {
+    display: grid; /* استخدام نظام الشبكة (Grid) */
+    grid-template-columns: repeat(4, 1fr); /* 4 أعمدة متساوية العرض */
+    gap: 15px; /* مسافة بين عناصر الشبكة */
+    justify-items: center; /* توسيط العناصر داخل خلايا الشبكة */
+}
+
+/* تصميم كل صورة ثابتة */
+.fixed-image-item {
+    width: 200px; /* العرض المطلوب للصورة */
+    height: 150px; /* الارتفاع المطلوب للصورة */
+    border: none; /* إزالة الحدود */
+    border-radius: 0; /* إزالة الزوايا المستديرة */
+    overflow: hidden; /* لإخفاء أي جزء من الصورة يخرج عن الحدود */
+    background-color: transparent; /* إزالة لون الخلفية */
+    display: flex; /* استخدام فليكس بوكس لتوسيط الصورة */
+    justify-content: center; /* توسيط أفقي */
+    align-items: center; /* توسيط رأسي */
+}
+
+/* تصميم الصور الثابتة */
+.fixed-image-item img {
+    width: 100%; /* تأخذ كامل عرض العنصر الأب */
+    height: 100%; /* تأخذ كامل ارتفاع العنصر الأب */
+    object-fit: contain; /* لعرض الصورة كاملة داخل الحدود */
+    display: block; /* لجعل الصورة عنصر كتلوي */
+}
+
+/*
+  ==============================================
+  =                 التذييل (Footer)              =
+  ==============================================
+*/
+
+/* تصميم البار السفلي (Footer) */
+.main-footer {
+    background: linear-gradient(135deg, #E6F3FF 0%, #B8E0FF 100%); /* تدرج لوني للخلفية */
+    border-top: 3px solid #4A90E2; /* حدود علوية */
+    padding: 20px; /* مسافة داخلية */
+    text-align: center; /* توسيط النص */
+    margin-top: auto; /* يدفع التذييل للأسفل */
+    box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.1); /* ظل للتذييل */
+    width: 100%; /* عرض كامل */
+}
+
+.footer-social-icons {
+    display: flex; /* استخدام فليكس بوكس */
+    justify-content: center; /* توسيط الأيقونات أفقياً */
+    align-items: center; /* محاذاة رأسية */
+    gap: 25px; /* مسافة بين الأيقونات */
+    max-width: 1200px; /* أقصى عرض */
+    margin: 0 auto; /* توسيط الحاوية */
+}
+
+.footer-social-icons a {
+    color: #4A90E2; /* لون الأيقونات */
+    font-size: 32px; /* حجم الأيقونات */
+    transition: transform 0.3s ease, color 0.3s ease; /* تأثير انتقالي */
+    text-decoration: none; /* إزالة الخط تحت الروابط */
+}
+
+.footer-social-icons a:hover {
+    transform: scale(1.2); /* تكبير الأيقونة عند التمرير */
+    color: #357ABD; /* تغيير لون الأيقونة عند التمرير */
+}
+
+/*
+  ==============================================
+  =               استجابة التصميم               =
+  ==============================================
+*/
+
+/* الشاشات التي تقل عن 1024 بكسل (للتابلت والأجهزة الأصغر) */
+@media (max-width: 1024px) {
+    .header-container {
+        flex-wrap: wrap; /* السماح بالالتفاف لتوزيع العناصر */
+        justify-content: center; /* توسيط العناصر في سطر جديد */
+        gap: 15px; /* تقليل المسافة بين العناصر */
+    }
+
+    .logo-section {
+        flex-basis: 100%; /* الشعار يأخذ عرضاً كاملاً في سطر منفصل */
+        order: 1; /* يظل ترتيبه الأول */
+        margin-bottom: 10px; /* هامش سفلي */
+    }
+
+    .logo-circle {
+        margin: 0 auto; /* توسيط اللوجو */
+    }
+
+    .navigation-bar {
+        order: 2; /* شريط التنقل يأتي بعد اللوجو */
+        flex-basis: auto; /* يعود لحجمه الطبيعي */
+        justify-content: center; /* توسيط أيقونات التنقل */
+        overflow-x: auto; /* السماح بالتمرير الأفقي إذا كانت الأيقونات كثيرة */
+        -webkit-overflow-scrolling: touch; /* لتحسين التمرير على iOS */
+        padding-bottom: 5px; /* مسافة سفلية في حالة ظهور شريط التمرير */
+    }
+
+    .nav-icons {
+        flex-wrap: nowrap; /* منع الأيقونات من الالتفاف لأسفل */
+        font-size: 20px; /* تصغير حجم الأيقونات قليلاً */
+        gap: 5px; /* تقليل المسافة بين الأيقونات */
+    }
+
+    .nav-icon-btn {
+        font-size: 20px; /* تصغير حجم أيقونة الزر */
+        padding: 5px; /* تقليل البادينج */
+    }
+
+    .dropdown-menu {
+        min-width: 120px; /* تصغير عرض القوائم المنسدلة */
+    }
+
+    .search-section {
+        order: 3; /* حقل البحث يأتي في النهاية */
+        flex-basis: 100%; /* يأخذ عرضاً كاملاً */
+        max-width: 400px; /* لكن بحد أقصى 400 بكسل */
+        margin: 0 auto; /* وتوسيعه أفقياً */
+    }
+
+    .section-title {
+        font-size: 28px; /* تصغير حجم عنوان الأقسام */
+    }
+
+    /* تعديل تنسيق شعار الألعاب المتحرك على التابلت */
+    .games-gif-logo {
+        max-height: 120px; /* ارتفاع أقل على التابلت */
+    }
+}
+
+/* الشاشات التي تقل عن 768 بكسل (للموبايلات الصغيرة) */
+@media (max-width: 768px) {
+    .main-header {
+        margin: 5px; /* تقليل الهامش حول الترويسة */
+        padding: 10px; /* تقليل البادينج */
+    }
+
+    .header-container {
+        flex-direction: column; /* ترتيب عناصر الترويسة عمودياً */
+        align-items: center; /* محاذاة رأسية */
+        gap: 10px; /* تقليل المسافة */
+    }
+
+    .search-section {
+        width: 100%; /* زيادة عرض حقل البحث ليناسب الموبايل */
+        max-width: none;
+    }
+
+    /* تعديل مقاسات الكاروسيل في شاشات الموبايل */
+    .image-carousel-container {
+        flex-direction: column; /* جعل الكاروسيل وأزراره عمودياً */
+        gap: 5px; /* تقليل المسافة */
+    }
+
+    .image-carousel-wrapper {
+        overflow-x: auto; /* السماح بالتمرير الأفقي للكاروسيل */
+        -webkit-overflow-scrolling: touch;
+        scroll-snap-type: x mandatory; /* لجعل التمرير يتوقف عند الصور */
+        padding-bottom: 10px; /* مسافة سفلية */
+    }
+
+    .image-carousel {
+        width: fit-content; /* يجعل الكاروسيل يأخذ عرض محتواه */
+        flex-direction: row; /* إبقاء الصور في صف واحد */
+        justify-content: flex-start; /* يبدأ من اليسار */
+        flex-wrap: nowrap; /* يمنع الصور من الالتفاف لأسفل */
+        gap: 10px; /* تقليل المسافة بين الصور */
+    }
+
+    .carousel-image-container {
+        width: 250px; /* عرض الصورة في الكاروسيل على الموبايل */
+        height: 200px; /* ارتفاع الصورة في الكاروسيل على الموبايل */
+        flex-shrink: 0; /* مهم لضمان عدم تقليصها أكثر */
+        scroll-snap-align: center; /* لجعل التمرير يتوقف عند مركز الصورة */
+    }
+
+    .image-carousel-container .carousel-arrow {
+        display: none; /* إخفاء الأسهم على الموبايل */
+    }
+
+    /* تعديل مقاسات الخدمات العامة في شاشات الموبايل */
+    .fixed-images-container {
+        grid-template-columns: repeat(2, 1fr); /* عمودين بدلاً من أربعة على الموبايل */
+        gap: 10px; /* تقليل المسافة */
+    }
+
+    .fixed-image-item {
+        width: 150px; /* عرض الصورة في قسم الخدمات على الموبايل */
+        height: 110px; /* ارتفاع الصورة في قسم الخدمات على الموبايل */
+    }
+
+    .footer-social-icons {
+        gap: 15px; /* مسافة أقل بين الأيقونات */
+    }
+
+    .footer-social-icons a {
+        font-size: 28px; /* حجم أصغر للأيقونات */
+    }
+
+    /* تعديل تنسيق شعار الألعاب المتحرك على الموبايل */
+    .games-gif-logo {
+        max-height: 100px; /* ارتفاع أقل على الموبايل */
+    }
+}
+
+/* شاشات أصغر جداً (مثل iPhone SE) */
+@media (max-width: 480px) {
+    .section-title {
+        font-size: 24px; /* تصغير أكثر لعنوان القسم */
+    }
+
+    .carousel-image-container {
+        width: 90vw; /* استخدام نسبة مئوية من عرض الشاشة */
+        height: calc(90vw * 0.8); /* الحفاظ على نسبة العرض للارتفاع */
+    }
+
+    .fixed-images-container {
+        grid-template-columns: 1fr; /* عمود واحد فقط في قسم الخدمات */
+    }
+
+    .fixed-image-item {
+        width: 80%; /* جعل الصور تأخذ معظم العرض المتاح */
+        height: calc(80% * 0.75); /* الحفاظ على نسبة العرض للارتفاع */
+        margin: 0 auto; /* توسيط العنصر */
+    }
+
+    .nav-icons {
+        gap: 3px; /* تقليل المسافة بين أيقونات التنقل جداً */
+    }
+
+    .nav-icon-btn {
+        font-size: 18px; /* تصغير حجم أيقونة البار العلوي */
+        padding: 3px;
+    }
+}

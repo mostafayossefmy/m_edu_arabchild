@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>اختيار المستوى</title>
+    <style>
+        body {
+    margin: 0; /* إزالة الهوامش */
+    padding: 0; /* إزالة الحواف */
+    font-family: Arial, sans-serif; /* نوع الخط */
+    
+    /* صورة الخلفية لشاشة عرض المستويات */
+    background-image: url("images/bg_levels.png"); /* ← اسم ملف الخلفية */
+    background-size: cover; /* جعل الصورة تغطي الشاشة بالكامل */
+    background-position: center; /* توسيط الصورة */
+    background-repeat: no-repeat; /* عدم تكرار الصورة */
+
+    display: flex; /* استخدام flex للتوسيط */
+    flex-direction: column; /* ترتيب العناصر عمودياً */
+    justify-content: center; /* توسيط عمودي */
+    align-items: center; /* توسيط أفقي */
+    height: 100vh; /* ملء الشاشة بالكامل */
+    position: relative; /* لتحديد مكان الأيقونة السفلية */
+}
+        
+
+        /* الحاوية الرئيسية للأيقونات */
+        .levels-container {
+            display: flex; /* عرض الأيقونات بجانب بعض */
+            gap: 70px; /* ← المسافة بين الأيقونات */
+        }
+
+        /* تنسيق أيقونات المستوى */
+        .level-icon {
+            width: 100px; /* ← عرض الأيقونة */
+            height: auto; /* ← الارتفاع يتناسب تلقائياً */
+            cursor: pointer; /* المؤشر يتحول لليد */
+            transition: transform 0.3s ease; /* تأثير الحركة عند المرور */
+        }
+
+        /* تكبير بسيط عند مرور الماوس */
+        .level-icon:hover {
+            transform: scale(1.1); /* تكبير الأيقونة */
+        }
+
+
+               /* خلفية الشاشة */
+        .background {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* ملء الخلفية */
+        }
+
+
+
+
+        /* أيقونة الخروج */
+        .exit-icon {
+            position: absolute; /* تموضع مطلق داخل الصفحة */
+            bottom: 20px; /* ← المسافة من أسفل الشاشة (تعديل الرقم للتغيير) */
+            left: 50%; /* في منتصف العرض */
+            transform: translateX(-50%); /* ضبط لتكون بالمنتصف */
+            width: 80px; /* ← عرض الأيقونة (تعديل الرقم لتكبير/تصغير) */
+            height: auto; /* الارتفاع يتناسب تلقائياً */
+            cursor: pointer; /* شكل المؤشر يد */
+            transition: transform 0.3s ease; /* تأثير الحركة */
+        }
+
+        /* تكبير أيقونة الخروج عند المرور عليها */
+        .exit-icon:hover {
+            transform: translateX(-50%) scale(1.1);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- الحاوية الرئيسية للأيقونات -->
+    <div class="levels-container">
+        <!-- أيقونة المستوى البسيط -->
+        <img src="images/level_easy.png" alt="مستوى بسيط" class="level-icon" onclick="goToLevel(1)">
+        
+        <!-- أيقونة المستوى المتوسط -->
+        <img src="images/level_medium.png" alt="مستوى متوسط" class="level-icon" onclick="goToLevel(2)">
+        
+        <!-- أيقونة المستوى الصعب -->
+        <img src="images/level_hard.png" alt="مستوى صعب" class="level-icon" onclick="goToLevel(3)">
+    
+    
+    
+   
+    </div>
+
+    <!-- أيقونة الخروج -->
+    <img src="images/exit.png" alt="خروج" class="exit-icon" onclick="exitGame()">
+
+    <script>
+        // دالة الانتقال إلى مستوى معين
+        function goToLevel(levelNumber) {
+            if (levelNumber === 1) {
+                window.location.href = "level1.html"; // الانتقال للمستوى الأول
+            } else if (levelNumber === 2) {
+                window.location.href = "level2.html"; // الانتقال للمستوى الثاني
+            } else if (levelNumber === 3) {
+                window.location.href = "level3.html"; // الانتقال للمستوى الثالث
+            }
+        }
+
+        // دالة الخروج من اللعبة
+        function exitGame() {
+            // في المتصفح لا يمكن إغلاق النافذة إلا إذا فُتحت بواسطة JavaScript
+            // ممكن نعرض رسالة تأكيد
+            if (confirm("هل تريد الخروج من اللعبة؟")) {
+                window.close(); // محاولة إغلاق النافذة
+            }
+        }
+    </script>
+
+</body>
+</html>
