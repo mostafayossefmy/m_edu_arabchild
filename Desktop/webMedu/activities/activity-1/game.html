@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>نشاط ترتيب الأرقام</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css"><!-- ربط ملف التنسيقات -->
+</head>
+<body>
+
+  <!-- زر العودة للصفحة الرئيسية -->
+  <a href="../../index.html" class="fixed-back-button">
+    <img src="images/home_back.png" alt="العودة للصفحة الرئيسية">
+  </a>
+
+  <!-- الحاوية العامة للنشاط -->
+  <div class="container" id="gameContainer">
+
+    <!-- رسالة تعليمية تظهر 3 ثواني -->
+    <div id="startMessage">رتّب الأرقام من 1 إلى 10</div>
+
+    <!-- مربع اللعب في منتصف الشاشة -->
+    <div id="playArea"></div>
+
+    <!-- صف الأرقام الصحيحة يظهر فوق المربع -->
+    <div id="correctRow"></div>
+
+    <!-- نص برافوو -->
+    <div id="bravoText" class="hidden">برافوووو!</div>
+
+    <!-- رسالة خطأ -->
+    <div id="errorText" class="hidden">خطأ، حاول مرة أخرى</div>
+
+    <!-- زر التالي -->
+    <button id="nextButton" class="hidden">التالي</button>
+
+    <!-- أيقونات المساعدة -->
+    <div id="helpIcons" class="hidden">
+      <img src="images/help.png" id="helpMode" alt="بمساعدة">
+      <img src="images/unhelp.png" id="noHelpMode" alt="بدون مساعدة">
+    </div>
+
+    <!-- طبقة البالونات -->
+    <div id="balloonsLayer"></div>
+  </div>
+
+  <!-- الأصوات -->
+  <audio id="clickSound" src="sounds/click.mp3"></audio>
+  <audio id="clapSound"  src="sounds/clap.mp3"></audio>
+  <audio id="wrongSound" src="sounds/wrong.mp3"></audio>
+
+  <!-- سكربت الوظائف -->
+
+  <!-- كود تعطيل الزر الأيمن -->
+  <script>
+    // تعطيل قائمة السياق عند الضغط على الزر الأيمن
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        console.log('تم تعطيل قائمة السياق في النشاط!');
+    });
+  </script>
+
+  
+  
+  <script src="script.js"></script>
+
+  
+</body>
+</html>

@@ -1,0 +1,83 @@
+﻿<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>شاشة البداية</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        /* إعدادات عامة للصفحة */
+        body {
+            margin: 0;
+            padding: 0;
+            background: url('images/splash.png') no-repeat center center; /* صورة الخلفية */
+            background-size: cover; /* جعل الخلفية تغطي الشاشة */
+            display: flex;
+            justify-content: center; /* توسيط أفقي */
+            align-items: center; /* توسيط عمودي */
+            height: 100vh; /* ارتفاع الشاشة بالكامل */
+            font-family: 'Cairo', sans-serif;
+            overflow: hidden; /* منع أي تمرير */
+        }
+
+        /* زر البداية */
+        .start-btn {
+            background: none; /* بدون خلفية */
+            border: none; /* بدون حدود */
+            cursor: pointer; /* شكل اليد عند المرور */
+            opacity: 0; /* مبدئياً مخفي */
+            transform: translateY(100px) scale(0.5); /* أسفل وبحجم صغير */
+            animation: showStart 1s ease forwards; /* تطبيق الحركة */
+            animation-delay: 1s; /* تأخير ظهور الزر */
+        }
+
+        /* جعل صورة الزر بحجم مناسب */
+        .start-btn img {
+            width: 200px;
+            height: auto;
+        }
+
+        /* تأثير hover */
+        .start-btn:hover {
+            transform: translateY(0) scale(1.1); /* تكبير بسيط عند المرور */
+        }
+
+        /* الحركة: صعود + تكبير + إظهار */
+        @keyframes showStart {
+            0% {
+                opacity: 0;
+                transform: translateY(100px) scale(0.5);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- زر البداية -->
+    <button class="start-btn" id="startBtn">
+        <img src="images/start.png" alt="ابدأ">
+    </button>
+
+    <script>
+        // عند الضغط على زر البداية
+        document.getElementById('startBtn').addEventListener('click', function() {
+            // الانتقال إلى صفحة النشاط
+            window.location.href = 'game.html';
+        });
+
+
+                       // تعطيل قائمة السياق عند الضغط على الزر الأيمن
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            console.log('تم تعطيل قائمة السياق في النشاط!');
+        });
+
+        
+    </script>
+
+</body>
+</html>

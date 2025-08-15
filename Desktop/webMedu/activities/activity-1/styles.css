@@ -1,0 +1,133 @@
+/* الخط والخلفية العامة */
+*{box-sizing:border-box}
+body{
+  margin:0; padding:0;
+  font-family:'Cairo',sans-serif;
+  background:url('images/bg_activity.png') no-repeat center/cover;
+  direction:rtl;
+}
+
+/* زر العودة */
+.fixed-back-button{
+  position:fixed; top:20px; right:20px; z-index:1000;
+  background:none; border:none; padding:0; cursor:pointer;
+}
+.fixed-back-button img{
+  width:60px; height:60px; border-radius:50%;
+  object-fit:cover; box-shadow:0 5px 15px rgba(0,123,255,.4);
+  transition:transform .3s ease;
+}
+.fixed-back-button:hover{ transform:scale(1.08) }
+
+/* الحاوية العامة */
+.container{
+  position:relative; width:100%; height:100vh; overflow:hidden;
+}
+
+/* رسالة البداية */
+#startMessage{
+  position:absolute; top:12%; left:50%; transform:translateX(-50%);
+  font-size:26px; font-weight:700; color:#004aad;
+  background:rgba(255,255,255,.9);
+  border:2px solid #004aad; border-radius:10px;
+  padding:10px 16px; z-index:10;
+}
+
+/* مربع اللعب */
+#playArea{
+  position:absolute;
+  width:420px; height:420px;
+  top:50%; left:50%; transform:translate(-50%,-50%);
+  background:#f9fbff; border:4px solid #3498db; border-radius:12px;
+  box-shadow:0 8px 30px rgba(0,0,0,.12);
+  overflow:hidden;
+}
+
+/* صف الأرقام الصحيحة */
+#correctRow{
+  position:absolute;
+  top: -70px;       /* فوق المربع */
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  gap:10px;         /* مسافة بين الأرقام */
+  z-index:25;
+}
+
+/* الأرقام داخل المربع */
+.icon{
+  position:absolute;
+  width:54px; height:54px; line-height:54px; text-align:center;
+  background:#ffffff; color:#000; border:2px solid #3498db; border-radius:10px;
+  font-weight:700; font-size:20px; cursor:pointer; user-select:none;
+  transition:transform .2s ease, background-color .2s ease, box-shadow .2s ease;
+}
+.icon:hover{ transform:scale(1.06) }
+
+/* إبراز الرقم المطلوب */
+.icon.highlight{
+  background:#ffef85;
+  transform:scale(1.18);
+  box-shadow:none;
+}
+
+/* برافوو */
+#bravoText{
+  position:absolute; top:24%; left:50%; transform:translate(-50%,-50%) scale(1);
+  font-size:48px; font-weight:900; color:#ff0066;
+  background:rgba(255,255,255,.95); padding:14px 22px; border-radius:14px;
+  box-shadow:0 8px 20px rgba(0,0,0,.15);
+  z-index:20;
+  animation:zoomPulse .6s ease-in-out infinite alternate;
+}
+@keyframes zoomPulse{
+  from{ transform:translate(-50%,-50%) scale(1) }
+  to  { transform:translate(-50%,-50%) scale(1.25) }
+}
+
+/* رسالة الخطأ */
+#errorText{
+  position:absolute; bottom:20px; left:50%; transform:translateX(-50%);
+  font-size:20px; font-weight:700; color:#fff; background:rgba(220,0,0,.9);
+  padding:10px 16px; border-radius:10px; z-index:20;
+}
+
+/* زر التالي */
+#nextButton{
+  position:absolute; bottom:22px; left:50%; transform:translateX(-50%);
+  padding:10px 18px; border:none; border-radius:10px; font-size:18px; font-weight:700;
+  background:#2ecc71; color:#fff; cursor:pointer; z-index:20;
+  box-shadow:0 6px 16px rgba(46,204,113,.5);
+  transition:transform .15s ease, filter .15s ease;
+  border:2px solid #fff;
+  border-radius:10px;
+}
+#nextButton:hover{ transform:translateX(-50%) scale(1.05); filter:brightness(1.03) }
+
+/* أيقونات المساعدة */
+#helpIcons{
+  position:absolute; bottom:22px; left:50%; transform:translateX(-50%);
+  display:flex; align-items:center; gap:24px; z-index:20;
+}
+#helpIcons img{
+  width:62px; height:62px; cursor:pointer;
+  transition:transform .2s ease, filter .2s ease;
+}
+#helpIcons img:hover{ transform:scale(1.08); filter:brightness(1.05) }
+
+/* طبقة البالونات */
+#balloonsLayer{
+  position:absolute; inset:0; pointer-events:none; z-index:18;
+}
+.balloon{
+  position:absolute; bottom:-80px;
+  font-size:34px;
+  animation:floatUp linear forwards;
+}
+@keyframes floatUp{
+  from{ transform:translateY(0); opacity:1 }
+  to  { transform:translateY(-110vh); opacity:0 }
+}
+
+/* إخفاء العناصر */
+.hidden{ display:none !important; }

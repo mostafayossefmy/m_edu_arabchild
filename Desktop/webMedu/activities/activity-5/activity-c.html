@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ترتيب الأرقام</title>
+    <style>
+        body { 
+            margin: 0; padding: 0; 
+            background: linear-gradient(135deg, #a8edea, #fed6e3);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+        }
+        .home { position: absolute; top: 20px; left: 20px; cursor: pointer; }
+        .home img { width: 50px; height: 50px; }
+        .order-area { 
+            display: flex; 
+            flex-direction: row-reverse; /* من اليمين لليسار */
+            gap: 10px; 
+            height: 100px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 15px;
+            padding: 20px;
+            min-width: 650px;
+            align-items: center; /* توسيط عمودياً */
+            justify-content: right; /* توسيط أفقياً */
+        }
+        .ordered-number { 
+            width: 60px; height: 60px;
+            background: linear-gradient(45deg, #4834d4, #686de0); /* أزرق بدلاً من الأخضر */
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+        }
+        .numbers { 
+            display: grid; 
+            grid-template-columns: repeat(5, 1fr); 
+            gap: 15px; 
+            max-width: 500px;
+        }
+        .number { 
+            width: 60px; height: 60px;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            cursor: grab;
+        }
+        .message { font-size: 24px; font-weight: bold; margin-top: 20px; display: none; }
+        .success { color: green; }
+        .balloon { 
+            position: absolute;
+            width: 60px; height: 80px;
+            background: linear-gradient(45deg, #fd79a8, #fdcb6e);
+            border-radius: 50%;
+            animation: float 3s linear;
+        }
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); }
+            100% { transform: translateY(-100px) rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div style="position: absolute; top: 20px; left: 50%; transform: translateX(-50%); font-size: 24px; font-weight: bold; color: #333;">
+        ترتيب الأرقام
+    </div>
+    
+    <div class="home" onclick="window.location='activities.html'">
+        <img src="images/home.png">
+    </div>
+    
+    <div class="order-area" id="orderArea"></div>
+    
+    <div class="message" id="message"></div>
+    
+    <div class="numbers" id="numbersGrid"></div>
+
+    <script>
+        let orderedNumbers = [];
+        let nextExpected = 1;
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            shuffleNumbers();
+        });
+
+        function shuffleNumbers() {
+            orderedNumbers = [];
+            nextExpected = 1;
+            document.getElementById('orderArea').innerHTML = '';
+            document.getElementById('message').style.display = 'none';
+            
+            const grid = document.getElementById('numbersGrid');
+            grid.innerHTML = '';
+            
+            // الأرقام مبعثرة عشوائياً
+            const numbers = [1,2,3,4,5,6,7,8,9,10].sort(() => Math.random() - 0.5);
+            
+            numbers.forEach(num => {
+                const div = document.createElement('div');
+                div.className = 'number';
+                div.textContent = num;
+                div.draggable = true;
+                div.addEventListener('dragstart', dragStart);
+                grid.appendChild(div);
+            });
+            
+            setupDropArea();
+        }
+
+        function dragStart(e) {
+            e.dataTransfer.setData('text/plain', this.textContent);
+        }
+
+        function setupDropArea() {
+            const dropArea = document.getElementById('orderArea');
+            
+            dropArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+            });
+
+            dropArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                const data = e.dataTransfer.getData('text/plain');
+                const droppedNumber = parseInt(data);
+                
+                if (droppedNumber === nextExpected) {
+                    const audio = new Audio('sounds/correct.mp3');
+                    audio.play().catch(e => {});
+                    
+                    const div = document.createElement('div');
+                    div.className = 'ordered-number';
+                    div.textContent = droppedNumber;
+                    dropArea.appendChild(div);
+                    
+                    orderedNumbers.push(droppedNumber);
+                    nextExpected++;
+                    
+                    // إزالة الرقم من الشبكة
+                    const numbers = document.querySelectorAll('.number');
+                    numbers.forEach(num => {
+                        if (parseInt(num.textContent) === droppedNumber) {
+                            num.remove();
+                        }
+                    });
+                    
+                    if (orderedNumbers.length === 10) {
+                        document.getElementById('message').textContent = 'برافووو!';
+                        document.getElementById('message').className = 'message success';
+                        document.getElementById('message').style.display = 'block';
+                        
+                        const audio = new Audio('sounds/clap.mp3');
+                        audio.play().catch(e => {});
+                        
+                        createBalloons();
+                        
+                        setTimeout(shuffleNumbers, 3000);
+                    }
+                } else {
+                    const audio = new Audio('sounds/wrong.mp3');
+                    audio.play().catch(e => {});
+                }
+            });
+        }
+
+        function createBalloons() {
+            for (let i = 0; i < 10; i++) {
+                setTimeout(() => {
+                    const balloon = document.createElement('div');
+                    balloon.className = 'balloon';
+                    balloon.style.left = Math.random() * 100 + 'vw';
+                    document.body.appendChild(balloon);
+                    
+                    setTimeout(() => {
+                        if (balloon.parentNode) {
+                            balloon.parentNode.removeChild(balloon);
+                        }
+                    }, 3000);
+                }, i * 300);
+            }
+        }
+    </script>
+
+    <!-- منع النقر بزر الماوس الأيمن -->
+    <script>
+        document.addEventListener('contextmenu', e => e.preventDefault());
+    </script>
+</body>
+</html>
+
+
