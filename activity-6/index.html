@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>تعلم الحروف العربية</title>
+    <style>
+        body { margin: 0; padding: 0; }
+        #splash { width: 100vw; height: 100vh; background: url('images/splash.png') center/cover no-repeat; }
+        #startBtn { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+        #startBtn img { width: 150px; height: 150px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div id="splash"></div>
+    <div id="startBtn">
+        <img src="images/start.png" onclick="window.location.href='activities.html'">
+    </div>
+    <script>
+        setTimeout(() => {
+            document.getElementById('startBtn').style.display = 'block';
+        }, 3000);
+
+
+           // تعطيل قائمة السياق عند الضغط على الزر الأيمن
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        console.log('تم تعطيل قائمة السياق في النشاط!');
+    });
+    </script>
+</body>
+</html>

@@ -1,0 +1,282 @@
+<!DOCTYPE html> <!-- تعريف نوع المستند كـ HTML5 -->
+<html> <!-- بداية مستند HTML -->
+<head> <!-- بداية قسم الرأس -->
+    <title>تحليل الكلمات</title> <!-- عنوان الصفحة في شريط المتصفح -->
+    <style> 
+        body { 
+            margin: 0; /* إزالة الهوامش الخارجية */
+            padding: 0; /* إزالة المسافات الداخلية */
+            background: linear-gradient(135deg, #a8edea, #fed6e3); /* خلفية متدرجة بالألوان */
+            height: 100vh; /* ارتفاع كامل الشاشة */
+            display: flex; /* استخدام نظام العرض المرن */
+            flex-direction: column; /* ترتيب العناصر عمودياً */
+            align-items: center; /* توسيط العناصر أفقياً */
+            justify-content: center; /* توسيط العناصر عمودياً */
+            gap: 30px; /* مسافة بين العناصر 30 بكسل */
+        }
+        .header { 
+            position: absolute; /* موضع مطلق */
+            top: 20px; /* مسافة 20 بكسل من الأعلى */
+            left: 20px; /* مسافة 20 بكسل من اليسار */
+            display: flex; /* عرض مرن */
+            align-items: center; /* توسيط عناصر الرأس عمودياً */
+            gap: 15px; /* مسافة بين العناصر 15 بكسل */
+        }
+        .home img { 
+            width: 50px; /* عرض صورة زر العودة */
+            height: 50px; /* ارتفاع صورة زر العودة */
+            cursor: pointer; /* تغيير شكل المؤشر عند النقر */
+        }
+        .activity-title { 
+            font-size: 24px; /* حجم الخط */
+            font-weight: bold; /* خط عريض */
+            color: #333; /* لون النص رمادي داكن */
+        }
+        .word-display { 
+            font-size: 36px; /* حجم الخط */
+            font-weight: bold; /* خط عريض */
+            color: #333; /* لون النص رمادي داكن */
+            font-family: 'Arial', sans-serif; /* نوع الخط */
+            margin-top: 60px; /* مسافة من الأعلى */
+        }
+        .analysis-area { 
+            width: 400px; /* عرض منطقة التحليل */
+            height: 100px; /* ارتفاع منطقة التحليل */
+            background: white; /* خلفية بيضاء */
+            border: 3px solid #333; /* إطار رمادي داكن */
+            border-radius: 15px; /* زوايا مدورة */
+            display: flex; /* عرض مرن */
+            align-items: center; /* توسيط عمودياً */
+            justify-content: center; /* توسيط أفقياً */
+            font-size: 60px; /* حجم الخط الكبير */
+            font-weight: bold; /* خط عريض */
+            font-family: 'Arial', sans-serif; /* نوع الخط */
+            color: blue; /* لون النص أزرق */
+        }
+        .result-area {
+            display: flex; /* عرض مرن */
+            align-items: center; /* توسيط عمودياً */
+            gap: 20px; /* مسافة بين العناصر 20 بكسل */
+            margin-top: 10px; /* مسافة من الأعلى */
+        }
+        .stars-left, .stars-right { 
+            display: flex; /* عرض مرن */
+            gap: 5px; /* مسافة بين النجوم 5 بكسل */
+        }
+        .star { 
+            font-size: 25px; /* حجم النجمة */
+            color: gold; /* لون النجمة ذهبي */
+            display: none; /* إخفاء النجوم في البداية */
+        }
+        .success-text {
+            font-size: 24px; /* حجم الخط */
+            font-weight: bold; /* خط عريض */
+            color: green; /* لون النص أخضر */
+            display: none; /* إخفاء النص في البداية */
+        }
+        .letters { 
+            display: grid; /* نظام شبكة */
+            grid-template-columns: repeat(10, 1fr); /* 10 أعمدة */
+            gap: 15px; /* مسافة بين العناصر */
+            max-width: 600px; /* عرض مناسب */
+            justify-content: center; /* توسيط في المنتصف */
+            direction: rtl; /* ترتيب من اليمين لليسار */
+            margin: 0 auto; /* توسيط أفقي */
+        }
+        .letter { 
+            width: 50px; /* عرض المربع */
+            height: 50px; /* ارتفاع المربع */
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24); /* خلفية متدرجة برتقالية */
+            border-radius: 15px; /* زوايا مدورة */
+            display: flex; /* عرض مرن */
+            align-items: center; /* توسيط عمودياً */
+            justify-content: center; /* توسيط أفقياً */
+            font-size: 24px; /* حجم الخط المكبر */
+            font-weight: bold; /* خط عريض */
+            color: white; /* لون النص أبيض */
+            cursor: grab; /* مؤشر السحب */
+            font-family: 'Arial', sans-serif; /* نوع الخط */
+        }
+    </style> <!-- نهاية قسم التنسيقات الداخلية -->
+</head> <!-- نهاية قسم الرأس -->
+<body> <!-- بداية قسم الجسم -->
+    <!-- رأس الصفحة مع زر العودة والعنوان -->
+    <div class="header">
+        <div class="home" onclick="window.location.href='activities.html'">
+            <img src="images/home.png"> <!-- صورة زر العودة -->
+        </div>
+        <div class="activity-title">تحليل الكلمات</div> <!-- عنوان النشاط -->
+    </div>
+    
+    <!-- عرض الكلمة التي يجب تحليلها -->
+    <div class="word-display" id="wordDisplay"></div>
+    
+    <!-- منطقة تحليل الحروف -->
+    <div class="analysis-area" id="analysisArea"></div>
+    
+    <!-- منطقة النتائج (النجوم والنص) -->
+    <div class="result-area">
+        <div class="stars-left" id="starsLeft">
+            <div class="star">★</div> <!-- نجمة يسار -->
+            <div class="star">★</div> <!-- نجمة يسار -->
+            <div class="star">★</div> <!-- نجمة يسار -->
+        </div>
+        <div class="success-text" id="successText">برافووو!</div> <!-- نص النجاح -->
+        <div class="stars-right" id="starsRight">
+            <div class="star">★</div> <!-- نجمة يمين -->
+            <div class="star">★</div> <!-- نجمة يمين -->
+            <div class="star">★</div> <!-- نجمة يمين -->
+        </div>
+    </div>
+    
+    <!-- شبكة الحروف للسحب -->
+    <div class="letters" id="lettersGrid"></div>
+
+    <script> <!-- بداية قسم الجافا سكريبت -->
+        let currentWord = 0; /* رقم الكلمة الحالية */
+        let currentLetterIndex = 0; /* مؤشر الحرف الحالي */
+        let wordLetters = []; /* مصفوفة حروف الكلمة */
+        let placedLetters = []; /* مصفوفة الحروف الموضوعة */
+        
+        // الكلمات والعلاقات مع الحروف
+        const words = [
+            { word: "أسد", letters: ['أ', 'س', 'د'] },
+            { word: "جزر", letters: ['ج', 'ز', 'ر'] }, 
+            { word: "ولد", letters: ['و', 'ل', 'د'] },
+            { word: "بنت", letters: ['ب', 'ن', 'ت'] },
+            { word: "عنب", letters: ['ع', 'ن', 'ب'] },        
+            { word: "جمل", letters: ['ج', 'م', 'ل'] },
+            { word: "زرع", letters: ['ز', 'ر', 'ع'] },
+            { word: "سوق", letters: ['س', 'و', 'ق'] },
+            { word: "طفل", letters: ['ط', 'ف', 'ل'] },
+            { word: "فيل", letters: ['ف', 'ي', 'ل'] },
+            { word: "قلم", letters: ['ق', 'ل', 'م'] },
+            { word: "قمر", letters: ['ق', 'م', 'ر'] },
+            { word: "ورق", letters: ['و', 'ر', 'ق'] },
+            { word: "مركب", letters: ['م', 'ر', 'ك','ب'] },
+            { word: "مترو", letters: ['م', 'ت', 'ر','و'] },
+            { word: "بطة", letters: ['ب', 'ط', 'ة'] },
+            { word: "دب", letters: ['د', 'ب'] },
+            { word: "شمس", letters: ['ش', 'م', 'س'] },
+            { word: "قطة", letters: ['ق', 'ط', 'ة'] },
+            { word: "خس", letters: ['خ', 'س'] },
+            { word: "سمكة", letters: ['س', 'م', 'ك','ة'] },
+            { word: "كرسي", letters: ['ك', 'ر', 'س','ي'] },
+            { word: "شورت", letters: ['ش', 'و', 'ر','ت'] },
+            { word: "خروف", letters: ['خ', 'ر', 'و','ف'] },
+            { word: "أرنب", letters: ['أ', 'ر', 'ن','ب'] },
+            { word: "بحر", letters: ['ب', 'ح', 'ر'] },
+            { word: "ورد", letters: ['و', 'ر', 'د'] },
+            { word: "توت", letters: ['ت', 'و', 'ت'] },
+            { word: "فلفل", letters: ['ف', 'ل', 'ف','ل'] },
+            { word: "ديك", letters: ['د', 'ي', 'ك'] },
+            { word: "قرد", letters: ['ق', 'ر', 'د'] },
+            { word: "كلب", letters: ['ك', 'ل', 'ب'] },
+            { word: "نمر", letters: ['ن', 'م', 'ر'] }
+        ];
+        
+        // الحروف العربية الكاملة
+        const arabicLetters = ['أ', 'ب', 'ت', 'ث', 'ج', 'ح', 'خ', 'د', 'ذ', 'ر', 'ز', 'س', 'ش', 'ص', 'ض', 'ط', 'ظ', 'ع', 'غ', 'ف', 'ق', 'ك', 'ل', 'م', 'ن', 'ه','ة', 'و','لا', 'ي'];
+        
+        // دالة تُنفذ عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            showNewWord(); // إظهار كلمة جديدة
+        });
+
+        // دالة إظهار كلمة جديدة عشوائية
+        function showNewWord() {
+            currentWord = Math.floor(Math.random() * words.length); // توليد رقم عشوائي للكلمة
+            currentLetterIndex = 0; /* إعادة تعيين مؤشر الحرف */
+            wordLetters = [...words[currentWord].letters]; /* نسخ حروف الكلمة */
+            placedLetters = []; /* تفريغ مصفوفة الحروف الموضوعة */
+            
+            document.getElementById('wordDisplay').textContent = words[currentWord].word; /* عرض الكلمة */
+            document.getElementById('analysisArea').textContent = ''; /* مسح منطقة التحليل */
+            
+            /* إخفاء النجوم والنص */
+            const starsLeft = document.querySelectorAll('#starsLeft .star');
+            const starsRight = document.querySelectorAll('#starsRight .star');
+            starsLeft.forEach(star => star.style.display = 'none');
+            starsRight.forEach(star => star.style.display = 'none');
+            document.getElementById('successText').style.display = 'none';
+            
+            const grid = document.getElementById('lettersGrid'); /* الحصول على شبكة الحروف */
+            grid.innerHTML = ''; /* مسح المحتوى السابق */
+            
+            /* عرض جميع الحروف العربية بالترتيب الطبيعي */
+            arabicLetters.forEach(letter => {
+                const div = document.createElement('div'); /* إنشاء عنصر جديد */
+                div.className = 'letter'; /* إضافة كلاس */
+                div.textContent = letter; /* وضع الحرف كنص */
+                div.draggable = true; /* جعل العنصر قابلاً للسحب */
+                div.addEventListener('dragstart', dragStart); /* إضافة حدث بدء السحب */
+                grid.appendChild(div); /* إضافة العنصر للشبكة */
+            });
+            
+            setupDropArea(); /* تهيئة منطقة الإفلات */
+        }
+
+        /* دالة بدء السحب */
+        function dragStart(e) {
+            e.dataTransfer.setData('text/plain', this.textContent); /* تخزين نص العنصر المُسحب */
+        }
+
+        /* دالة تهيئة منطقة الإفلات */
+        function setupDropArea() {
+            const dropArea = document.getElementById('analysisArea'); /* الحصول على منطقة التحليل */
+            
+            /* السماح بالإفلات في المنطقة */
+            dropArea.addEventListener('dragover', function(e) {
+                e.preventDefault(); /* منع السلوك الافتراضي */
+            });
+
+            /* معالجة عملية الإفلات */
+            dropArea.addEventListener('drop', function(e) {
+                e.preventDefault(); /* منع السلوك الافتراضي */
+                const data = e.dataTransfer.getData('text/plain'); /* الحصول على البيانات المُسقطة */
+                const droppedLetter = data; /* الحرف المُسقط */
+                const expectedLetter = wordLetters[currentLetterIndex]; /* الحرف المتوقع */
+                
+                /* التحقق مما إذا كان الحرف المُسقط صحيح */
+                if (droppedLetter === expectedLetter) {
+                    /* تشغيل صوت صحيح فور سحب الحرف الصحيح */
+                    const audio = new Audio('sounds/correct.mp3'); /* ملف صوت صحيح */
+                    audio.play().catch(e => {}); /* محاولة تشغيل الصوت */
+                    
+                    /* إضافة الحرف للمكان */
+                    placedLetters.push(droppedLetter); /* إضافة الحرف لمصفوفة الحروف الموضوعة */
+                    dropArea.textContent = placedLetters.join(''); /* عرض الحروف المتراكمة */
+                    currentLetterIndex++; /* زيادة مؤشر الحرف التالي */
+                    
+                    /* التحقق مما إذا تم تحليل الكلمة بالكامل */
+                    if (currentLetterIndex >= wordLetters.length) {
+                        /* تشغيل صوت الكلمة كاملة بعد إكمال التحليل */
+                        const wordAudio = new Audio(`sounds/word${currentWord + 1}.mp3`); /* ملف صوت الكلمة */
+                        wordAudio.play().catch(e => {}); /* محاولة تشغيل الصوت */
+                        
+                        /* إظهار النجوم والنص */
+                        const starsLeft = document.querySelectorAll('#starsLeft .star');
+                        const starsRight = document.querySelectorAll('#starsRight .star');
+                        starsLeft.forEach(star => star.style.display = 'inline'); /* إظهار نجوم اليسار */
+                        starsRight.forEach(star => star.style.display = 'inline'); /* إظهار نجوم اليمين */
+                        document.getElementById('successText').style.display = 'block'; /* إظهار نص النجاح */
+                        
+                        /* كلمة جديدة بعد 3 ثواني */
+                        setTimeout(showNewWord, 3000);
+                    }
+                }
+                /* إذا كان الحرف خطأ، لا يحدث شيء ويظل الحرف في مكانه */
+            });
+        }
+
+
+           // تعطيل قائمة السياق عند الضغط على الزر الأيمن
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        console.log('تم تعطيل قائمة السياق في النشاط!');
+    });
+
+
+    </script> <!-- نهاية قسم الجافا سكريبت -->
+</body> <!-- نهاية قسم الجسم -->
+</html> <!-- نهاية مستند HTML -->

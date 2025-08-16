@@ -1,0 +1,242 @@
+<!DOCTYPE html> <!-- تعريف نوع المستند كـ HTML5 -->
+<html> <!-- بداية مستند HTML -->
+<head> <!-- بداية قسم الرأس -->
+    <title>مطابقة الحروف</title> <!-- عنوان الصفحة في شريط المتصفح -->
+    <style> 
+        body { 
+            margin: 0; /* إزالة الهوامش الخارجية */
+            padding: 0; /* إزالة المسافات الداخلية */
+            background: linear-gradient(135deg, #a8edea, #fed6e3); /* خلفية متدرجة بالألوان */
+            height: 100vh; /* ارتفاع كامل الشاشة */
+            display: flex; /* استخدام نظام العرض المرن */
+            flex-direction: column; /* ترتيب العناصر عمودياً */
+            align-items: center; /* توسيط العناصر أفقياً */
+            justify-content: center; /* توسيط العناصر عمودياً */
+            gap: 30px; /* مسافة بين العناصر 30 بكسل */
+        }
+        .home { 
+            position: absolute; /* موضع مطلق */
+            top: 20px; /* مسافة 20 بكسل من الأعلى */
+            left: 20px; /* مسافة 20 بكسل من اليسار */
+            cursor: pointer; /* تغيير شكل المؤشر عند النقر */
+        }
+        .home img { 
+            width: 50px; /* عرض صورة زر العودة */
+            height: 50px; /* ارتفاع صورة زر العودة */
+        }
+        .activity-title { 
+            position: absolute; /* موضع مطلق */
+            top: 20px; /* مسافة 20 بكسل من الأعلى */
+            left: 50%; /* وضع العنوان في منتصف الشاشة أفقياً */
+            transform: translateX(-50%); /* توسيط العنوان تماماً */
+            font-size: 24px; /* حجم الخط */
+            font-weight: bold; /* خط عريض */
+            color: #333; /* لون النص رمادي داكن */
+        }
+        .match-area { 
+            display: flex; /* عرض مرن */
+            align-items: center; /* توسيط العناصر عمودياً */
+            gap: 30px; /* مسافة بين العناصر 30 بكسل */
+        }
+        .result-icon {
+            width: 100px; /* عرض صورة النتيجة */
+            height: 100px; /* ارتفاع صورة النتيجة */
+            display: none; /* إخفاء الصورة في البداية */
+        }
+        .image-box { 
+            width: 250px; /* عرض مربع الصورة */
+            height: 250px; /* ارتفاع مربع الصورة */
+            background: white; /* خلفية بيضاء */
+            border-radius: 20px; /* زوايا مدورة */
+            display: flex; /* عرض مرن */
+            align-items: center; /* توسيط عمودياً */
+            justify-content: center; /* توسيط أفقياً */
+        }
+        .image-box img { 
+            max-width: 230px; /* أقصى عرض للصورة */
+            max-height: 230px; /* أقصى ارتفاع للصورة */
+            border-radius: 15px; /* زوايا مدورة */
+        }
+        .drop-zone { 
+            width: 120px; /* عرض منطقة الإفلات */
+            height: 120px; /* ارتفاع منطقة الإفلات */
+            border: 3px dashed #30336b; /* إطار متقطع أزرق داكن */
+            border-radius: 20px; /* زوايا مدورة */
+            display: flex; /* عرض مرن */
+            align-items: center; /* توسيط عمودياً */
+            justify-content: center; /* توسيط أفقياً */
+            font-size: 16px; /* حجم الخط */
+            background: rgba(255,255,255,0.7); /* خلفية بيضاء شفافة */
+        }
+        .letters { 
+            display: grid; /* نظام شبكة */
+            grid-template-columns: repeat(7, 1fr); /* 7 أعمدة */
+            gap: 10px; /* مسافة بين العناصر */
+            max-width: 700px; /* عرض مناسب */
+            justify-content: center; /* توسيط في المنتصف */
+            direction: rtl; /* ترتيب من اليمين لليسار */
+        }
+        .letter { 
+            width: 45px; /* عرض المربع */
+            height: 45px; /* ارتفاع المربع */
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24); /* خلفية متدرجة برتقالية */
+            border-radius: 12px; /* زوايا مدورة */
+            display: flex; /* عرض مرن */
+            align-items: center; /* توسيط عمودياً */
+            justify-content: center; /* توسيط أفقياً */
+            font-size: 20px; /* حجم الخط */
+            font-weight: bold; /* خط عريض */
+            color: white; /* لون النص أبيض */
+            cursor: grab; /* مؤشر السحب */
+            font-family: 'Arial', sans-serif; /* نوع الخط */
+        }
+        .dropped-letter { 
+            width: 90px !important; /* عرض أكبر للحرف المُسقط */
+            height: 90px !important; /* ارتفاع أكبر للحرف المُسقط */
+            background: linear-gradient(45deg, #4834d4, #686de0) !important; /* خلفية متدرجة زرقاء */
+            font-size: 36px !important; /* حجم خط أكبر */
+            font-weight: bold !important; /* خط عريض */
+            border: 3px solid white !important; /* إطار أبيض سميك */
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3) !important; /* ظل أقوى */
+            border-radius: 20px !important; /* زوايا مدورة أكبر */
+        }
+        .message { 
+            font-size: 24px; /* حجم الخط */
+            font-weight: bold; /* خط عريض */
+            margin-top: 20px; /* مسافة من الأعلى */
+            display: none; /* إخفاء الرسالة في البداية */
+        }
+        .success { color: green; } /* لون أخضر للنجاح */
+        .error { color: red; } /* لون أحمر للخطأ */
+    </style> <!-- نهاية قسم التنسيقات الداخلية -->
+</head> <!-- نهاية قسم الرأس -->
+<body> <!-- بداية قسم الجسم -->
+    <!-- زر العودة للشاشة الرئيسية -->
+    <div class="home" onclick="window.location.href='activities.html'">
+        <img src="images/home.png"> <!-- صورة زر العودة -->
+    </div>
+    
+    <!-- عنوان النشاط في منتصف الأعلى -->
+    <div class="activity-title">مطابقة الحروف بالصور</div>
+    
+    <!-- منطقة المطابقة -->
+    <div class="match-area">
+        <img class="result-icon" id="resultIcon" src=""> <!-- صورة النتيجة (صح/خطأ) -->
+        <div class="image-box">
+            <img id="matchImage" src=""> <!-- صورة الحرف التي يجب مطابقتها -->
+        </div>
+        <div class="drop-zone" id="dropZone">ضع الحرف هنا</div> <!-- منطقة إفلات الحرف -->
+    </div>
+    
+    <!-- رسالة النتيجة -->
+    <div class="message" id="message"></div>
+    
+    <!-- شبكة الحروف للسحب -->
+    <div class="letters" id="lettersGrid"></div>
+
+    <script> <!-- بداية قسم الجافا سكريبت -->
+        let currentLetter = 0; /* المتغير الذي يحتوي على رقم الحرف الحالي */
+        const arabicLetters = ['أ', 'ب', 'ت', 'ث', 'ج', 'ح', 'خ', 'د', 'ذ', 'ر', 'ز', 'س', 'ش', 'ص', 'ض', 'ط', 'ظ', 'ع', 'غ', 'ف', 'ق', 'ك', 'ل', 'م', 'ن', 'ه', 'و', 'ي'];
+        
+        // دالة تُنفذ عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            showNewQuestion(); // إظهار سؤال جديد
+        });
+
+        // دالة إظهار سؤال جديد عشوائي
+        function showNewQuestion() {
+            currentLetter = Math.floor(Math.random() * 28) + 1; // توليد رقم عشوائي من 1-28
+            document.getElementById('matchImage').src = `images/photo${currentLetter}.png`; // عرض صورة الحرف
+            
+            const grid = document.getElementById('lettersGrid'); // الحصول على شبكة الحروف
+            grid.innerHTML = ''; // مسح المحتوى السابق
+            
+            // عرض الحروف بالترتيب الطبيعي (سيتم ترتيبها من اليمين لليسار تلقائياً)
+            arabicLetters.forEach(letter => {
+                const div = document.createElement('div'); // إنشاء عنصر جديد
+                div.className = 'letter'; // إضافة كلاس
+                div.textContent = letter; // وضع الحرف كنص
+                div.draggable = true; // جعل العنصر قابلاً للسحب
+                div.addEventListener('dragstart', dragStart); // إضافة حدث بدء السحب
+                grid.appendChild(div); // إضافة العنصر للشبكة
+            });
+            
+            document.getElementById('message').style.display = 'none'; // إخفاء رسالة النتيجة
+            document.getElementById('dropZone').innerHTML = 'ضع الحرف هنا'; // إعادة نص منطقة الإفلات
+            document.getElementById('resultIcon').style.display = 'none'; // إخفاء صورة النتيجة
+            
+            setupDropZone(); // تهيئة منطقة الإفلات
+        }
+
+        // دالة بدء السحب
+        function dragStart(e) {
+            e.dataTransfer.setData('text/plain', this.textContent); // تخزين نص العنصر المُسحب
+        }
+
+        // دالة تهيئة منطقة الإفلات
+        function setupDropZone() {
+            const dropZone = document.getElementById('dropZone'); // الحصول على منطقة الإفلات
+            const resultIcon = document.getElementById('resultIcon'); // الحصول على صورة النتيجة
+            
+            // السماح بالإفلات في المنطقة
+            dropZone.addEventListener('dragover', function(e) {
+                e.preventDefault(); // منع السلوك الافتراضي
+            });
+
+            // معالجة عملية الإفلات
+            dropZone.addEventListener('drop', function(e) {
+                e.preventDefault(); // منع السلوك الافتراضي
+                const data = e.dataTransfer.getData('text/plain'); // الحصول على البيانات المُسقطة
+                const droppedLetter = data; // الحرف المُسقط
+                
+                // الحصول على الحرف الصحيح من اسم الصورة
+                const correctLetters = ['أ', 'ب', 'ت', 'ث', 'ج', 'ح', 'خ', 'د', 'ذ', 'ر', 'ز', 'س', 'ش', 'ص', 'ض', 'ط', 'ظ', 'ع', 'غ', 'ف', 'ق', 'ك', 'ل', 'م', 'ن', 'ه', 'و', 'ي'];
+                const correctLetter = correctLetters[currentLetter - 1] || correctLetters[0];
+                
+                // التحقق مما إذا كان الحرف المُسقط صحيح
+                if (droppedLetter === correctLetter) {
+                    // إنشاء العنصر المُسقط بشكل أكبر وأجمل
+                    const droppedElement = document.createElement('div');
+                    droppedElement.className = 'letter dropped-letter'; // إضافة كلاس خاص
+                    droppedElement.textContent = droppedLetter; // وضع الحرف
+                    droppedElement.style.position = 'static'; // موضع ثابت
+                    droppedElement.style.cursor = 'default'; // مؤشر عادي
+                    
+                    // مسح منطقة الإفلات وإضافة العنصر الجديد
+                    dropZone.innerHTML = '';
+                    dropZone.appendChild(droppedElement);
+                    
+                    // إظهار علامة الصح على يسار المربع الرئيسي
+                    resultIcon.src = 'images/right.png'; // صورة الصح
+                    resultIcon.style.display = 'block'; // إظهار الصورة
+                    
+                    // تشغيل صوت الحرف
+                    const audio = new Audio(`sounds/ph${currentLetter}.mp3`); // ملف الصوت
+                    audio.play().catch(e => {}); // محاولة تشغيل الصوت
+                    
+                    setTimeout(showNewQuestion, 2000); // الانتقال لسؤال جديد بعد 2 ثانية
+                } else {
+                    // إظهار علامة الخطأ على يسار المربع الرئيسي
+                    resultIcon.src = 'images/wrong.png'; // صورة الخطأ
+                    resultIcon.style.display = 'block'; // إظهار الصورة
+                    
+                    const audio = new Audio('sounds/wrong.mp3'); // صوت الخطأ
+                    audio.play().catch(e => {}); // محاولة تشغيل الصوت
+                    
+                    // إخفاء علامة الخطأ بعد 2 ثانية
+                    setTimeout(() => {
+                        resultIcon.style.display = 'none'; // إخفاء الصورة
+                    }, 2000);
+                }
+            });
+        }
+
+   // تعطيل قائمة السياق عند الضغط على الزر الأيمن
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        console.log('تم تعطيل قائمة السياق في النشاط!');
+    });
+
+    </script> <!-- نهاية قسم الجافا سكريبت -->
+</body> <!-- نهاية قسم الجسم -->
+</html> <!-- نهاية مستند HTML -->
