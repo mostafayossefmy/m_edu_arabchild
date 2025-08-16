@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+       
+    <meta charset="UTF-8">
+       
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>لعبة بازل 4x4</title>
+        <style>
+        /* تنسيق الجسم والصفحة */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+            overflow: hidden;
+            position: relative;
+            background-image: url('images/bg_level2.png');
+            /* صورة الخلفية للمستوى الثاني */
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+
+        /* إخفاء العناوين والنصوص */
+        h1,
+        p {
+            display: none;
+        }
+
+        /* حاوية اللعبة الرئيسية */
+        .game-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            width: 100%;
+        }
+
+        /* حاوية المربعات الأساسية (الحل) */
+        #solution-container {
+            display: grid;
+            grid-template-columns: repeat(4, 100px);
+            /* 4 أعمدة بحجم 100 بكسل */
+            grid-template-rows: repeat(4, 100px);
+            /* 4 صفوف بحجم 100 بكسل */
+            gap: 5px;
+            border: 2px solid #ccc;
+            padding: 5px;
+            background-color: #fff;
+            min-height: 420px;
+            /* تعديل الارتفاع ليتناسب مع الشبكة 4x4 */
+            z-index: 10;
+            transition: all 0.5s ease-in-out;
+            margin: 0 20px;
+            /* إضافة هوامش جانبية لفصلها عن حاويات القطع */
+        }
+
+        /* تنسيق حاويات القطع الجديدة */
+        .puzzle-pieces-side-container {
+            display: flex;
+            flex-direction: column;
+            /* ترتيب القطع عمودياً */
+            gap: 5px;
+            align-self: flex-start;
+            /* محاذاة في الأعلى */
+            margin: 0 10px;
+            flex-wrap: wrap;
+        }
+
+        /* حاوية قطع البازل السفلية */
+        #puzzle-container-bottom {
+            display: flex;
+            /* لعرض القطع في صف واحد */
+            justify-content: center;
+            gap: 5px;
+            margin-top: 20px;
+            min-height: 110px;
+            /* ارتفاع كافي لصف واحد من القطع */
+        }
+
+        /* حاوية قطع البازل الجانبية */
+        #puzzle-container-left,
+        #puzzle-container-right {
+            display: flex;
+            flex-direction: column;
+            /* ترتيب القطع عمودياً */
+            gap: 5px;
+            align-self: flex-start;
+        }
+
+        /* تنسيق مربع الحل كصورة واحدة بعد الانتهاء */
+        #solution-container.solved {
+            display: block;
+            width: 410px;
+            /* تعديل الحجم ليتناسب مع 4x4 (4*100px + 3*5px gap) */
+            height: 410px;
+            /* تعديل الحجم ليتناسب مع 4x4 */
+            background-size: cover;
+            background-position: center;
+            padding: 0;
+            border: none;
+        }
+
+        /* منطقة الإفلات (مربع فارغ) */
+        .drop-zone {
+            width: 100px;
+            height: 100px;
+            background-color: #eee;
+            border: 2px dashed #999;
+            box-sizing: border-box;
+        }
+
+        .drop-zone.hovered {
+            background-color: #d0d0d0;
+            border-color: #333;
+        }
+
+        .drop-zone .puzzle-piece {
+            border: none;
+            cursor: default;
+        }
+
+        /* حاوية أجزاء الصورة (المربعات التي يتم سحبها) */
+        .puzzle-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 5px;
+            transition: opacity 0.5s ease-in-out;
+            z-index: 10;
+        }
+
+        /* إخفاء حاويات الأجزاء عند الانتهاء */
+        .puzzle-container.hidden {
+            opacity: 0;
+            pointer-events: none;
+            height: 0;
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        /* قطعة البازل (جزء من الصورة) */
+        .puzzle-piece {
+            width: 100px;
+            height: 100px;
+            background-size: 400px 400px;
+            /* تعديل حجم الصورة الأصلية (4x4) */
+            cursor: grab;
+            border: 1px solid #ddd;
+            box-sizing: border-box;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .puzzle-piece.dragging {
+            opacity: 0.7;
+            border: 2px dashed #333;
+        }
+
+        /* رسالة الفوز */
+        #message {
+            position: absolute;
+            top: 20px;
+            font-size: 30px;
+            font-weight: bold;
+            color: green;
+            z-index: 10;
+            text-align: center;
+            width: 100%;
+        }
+
+        /* أيقونات التحكم */
+        #controls-container {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 30px;
+            z-index: 15;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        #controls-container.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .control-icon {
+            cursor: pointer;
+            width: 50px;
+            height: 50px;
+            transition: transform 0.2s;
+        }
+
+        .control-icon:hover {
+            transform: scale(1.1);
+        }
+
+        /* البالونات وتأثيراتها */
+        .balloon {
+            position: fixed;
+            width: 40px;
+            height: 60px;
+            background-color: #ff4136;
+            border-radius: 50%;
+            bottom: -80px;
+            z-index: 20;
+            box-shadow: inset -8px -8px 0 rgba(0, 0, 0, 0.2);
+            opacity: 0.8;
+            pointer-events: none;
+        }
+
+        .balloon:before {
+            content: "";
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 8px;
+            background-color: inherit;
+            border-radius: 0 0 50% 50%;
+            z-index: -1;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(5deg);
+                opacity: 0.6;
+            }
+
+            50% {
+                transform: translateY(-150vh) rotate(-5deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-300vh) rotate(10deg);
+                opacity: 0.4;
+            }
+        }
+
+        .balloon:nth-child(odd) {
+            animation: float 3s ease-in-out infinite alternate;
+        }
+
+        .balloon:nth-child(even) {
+            animation: float 4s ease-in-out infinite alternate-reverse;
+        }
+
+        .balloon:nth-child(3n+1) {
+            background-color: #ffc107;
+        }
+
+        .balloon:nth-child(3n+2) {
+            background-color: #007bff;
+        }
+
+        .balloon:nth-child(3n+3) {
+            background-color: #28a745;
+        }
+    </style>
+</head>
+
+<body>
+        <div id="controls-container">
+                <img src="images/home.png" alt="Home" class="control-icon" id="home-icon">
+                <img src="images/again.png" alt="Again" class="control-icon" id="again-icon">
+            </div>
+
+        <h1>لعبة بازل 4x4</h1>
+        <p>قم بسحب أجزاء الصورة إلى الأماكن الصحيحة.</p>
+       
+        <div class="game-container">
+                <div id="puzzle-container-left" class="puzzle-container"></div>         <div id="solution-container">
+        </div>
+                <div id="puzzle-container-right" class="puzzle-container"></div>     </div>
+        <div id="puzzle-container-bottom" class="puzzle-container"></div>     <div id="message"></div>
+        <audio id="correct-sound" src="sounds/correct.mp3"></audio>
+        <audio id="wrong-sound" src="sounds/wrong.mp3"></audio>
+        <audio id="bravoo-sound" src="sounds/bravoo.mp3"></audio>
+
+       
+    <script>
+        // هنا يبدأ كود JavaScript الخاص باللعبة
+        const puzzleContainerLeft = document.getElementById('puzzle-container-left'); // حاوية القطع على اليسار
+        const puzzleContainerRight = document.getElementById('puzzle-container-right'); // حاوية القطع على اليمين
+        const puzzleContainerBottom = document.getElementById('puzzle-container-bottom'); // حاوية القطع في الأسفل
+        const solutionContainer = document.getElementById('solution-container'); // حاوية الحل (المربعات الفارغة)
+        const message = document.getElementById('message'); // رسالة الفوز
+        const correctSound = document.getElementById('correct-sound'); // صوت الإجابة الصحيحة
+        const wrongSound = document.getElementById('wrong-sound'); // صوت الإجابة الخاطئة
+        const bravooSound = document.getElementById('bravoo-sound'); // صوت الفوز
+        const controlsContainer = document.getElementById('controls-container'); // حاوية أيقونات التحكم
+        const againIcon = document.getElementById('again-icon'); // أيقونة إعادة اللعبة
+        const homeIcon = document.getElementById('home-icon'); // أيقونة العودة للصفحة الرئيسية
+
+        const totalPieces = 16; // إجمالي عدد القطع في بازل 4x4
+        const START_IMAGE_INDEX = 11; // فهرس بداية الصور لهذا المستوى
+        const END_IMAGE_INDEX = 20; // فهرس نهاية الصور لهذا المستوى
+        let imageOrder = []; // مصفوفة لتخزين ترتيب الصور العشوائي
+        let currentImagePosition = 0; // مؤشر للصورة الحالية في الترتيب العشوائي
+
+        let currentDrag = null; // متغير لتخزين القطعة التي يتم سحبها حاليًا
+        let originalParent = null; // متغير لتخزين الحاوية الأصلية للقطعة
+
+        // دالة إنشاء اللعبة
+        function createPuzzle() {
+            // إعداد اللعبة لمرحلة جديدة
+            puzzleContainerLeft.innerHTML = ''; // مسح قطع البازل القديمة من الحاوية اليسرى
+            puzzleContainerRight.innerHTML = ''; // مسح قطع البازل القديمة من الحاوية اليمنى
+            puzzleContainerBottom.innerHTML = ''; // مسح قطع البازل القديمة من الحاوية السفلية
+            solutionContainer.innerHTML = ''; // مسح مناطق الإفلات القديمة
+            message.textContent = ''; // مسح رسالة الفوز
+            puzzleContainerLeft.classList.remove('hidden'); // إظهار حاويات الأجزاء
+            puzzleContainerRight.classList.remove('hidden');
+            puzzleContainerBottom.classList.remove('hidden');
+            solutionContainer.classList.remove('solved'); // إزالة حالة "تم الحل"
+            solutionContainer.style.backgroundImage = 'none'; // إزالة الصورة الكاملة
+            controlsContainer.classList.remove('visible'); // إخفاء أيقونات التحكم
+            stopBalloons(); // إيقاف البالونات القديمة
+
+            const currentImage = imageOrder[currentImagePosition]; // الحصول على رقم الصورة الحالية
+            const imageSrc = `images/photo${currentImage}.png`; // تحديد مسار الصورة
+            let pieces = []; // مصفوفة لتخزين قطع البازل
+
+            // حلقة لإنشاء أجزاء الصورة
+            for (let i = 0; i < totalPieces; i++) {
+                const piece = document.createElement('div'); // إنشاء عنصر <div>
+                piece.className = 'puzzle-piece'; // إضافة فئة لتنسيق القطعة
+                piece.draggable = true; // جعل القطعة قابلة للسحب
+                piece.setAttribute('data-index', i); // تعيين فهرس القطعة كخاصية بيانات
+
+                const row = Math.floor(i / 4); // تعديل: حساب رقم الصف لشبكة 4x4
+                const col = i % 4; // تعديل: حساب رقم العمود لشبكة 4x4
+                piece.style.backgroundImage = `url(${imageSrc})`; // تعيين الصورة كخلفية
+                piece.style.backgroundPosition = `-${col * 100}px -${row * 100}px`; // تحديد موضع الجزء من الصورة
+
+                pieces.push(piece); // إضافة القطعة للمصفوفة
+            }
+
+            shuffleArray(pieces); // خلط ترتيب القطع عشوائياً
+
+            // توزيع القطع على الحاويات الثلاث الجديدة
+            const piecesPerContainer = Math.floor(pieces.length / 3);
+            for (let i = 0; i < piecesPerContainer; i++) {
+                puzzleContainerLeft.appendChild(pieces[i]);
+                puzzleContainerRight.appendChild(pieces[i + piecesPerContainer]);
+            }
+            for (let i = piecesPerContainer * 2; i < pieces.length; i++) {
+                puzzleContainerBottom.appendChild(pieces[i]);
+            }
+
+
+            // حلقة لإنشاء مناطق الإفلات
+            for (let i = 0; i < totalPieces; i++) {
+                const dropZone = document.createElement('div'); // إنشاء عنصر <div>
+                dropZone.className = 'drop-zone'; // إضافة فئة لتنسيق منطقة الإفلات
+                dropZone.setAttribute('data-index', i); // تعيين فهرس المنطقة
+                solutionContainer.appendChild(dropZone); // إضافة منطقة الإفلات إلى حاوية الحل
+            }
+        }
+
+        // دالة خلط المصفوفة (Fisher-Yates shuffle)
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1)); // اختيار فهرس عشوائي
+                [array[i], array[j]] = [array[j], array[i]]; // تبديل العناصر
+            }
+        }
+
+        // الاستماع لأحداث السحب والإفلات
+        // إضافة المستمع إلى جميع حاويات القطع
+        document.querySelectorAll('.puzzle-container').forEach(container => {
+            container.addEventListener('dragstart', (e) => { // عند بداية السحب
+                if (e.target.classList.contains('puzzle-piece')) {
+                    currentDrag = e.target; // تخزين القطعة التي يتم سحبها
+                    originalParent = e.target.parentElement; // تخزين الحاوية الأصلية
+                    e.dataTransfer.setData('text/plain', e.target.dataset.index); // تعيين بيانات السحب
+                    e.target.classList.add('dragging'); // إضافة فئة للتنسيق أثناء السحب
+                }
+            });
+        });
+
+        document.addEventListener('dragend', (e) => { // عند انتهاء السحب
+            if (currentDrag) {
+                currentDrag.classList.remove('dragging'); // إزالة فئة التنسيق
+                currentDrag = null;
+                originalParent = null;
+            }
+        });
+
+        solutionContainer.addEventListener('dragover', (e) => { // عند مرور القطعة فوق منطقة الإفلات
+            e.preventDefault();
+            if (e.target.classList.contains('drop-zone') && e.target.children.length === 0) {
+                e.target.classList.add('hovered');
+            }
+        });
+
+        solutionContainer.addEventListener('dragleave', (e) => { // عند مغادرة القطعة لمنطقة الإفلات
+            if (e.target.classList.contains('drop-zone')) {
+                e.target.classList.remove('hovered');
+            }
+        });
+
+        solutionContainer.addEventListener('drop', (e) => { // عند إفلات القطعة في منطقة الإفلات
+            e.preventDefault();
+            if (e.target.classList.contains('drop-zone') && e.target.children.length === 0) {
+                const draggedIndex = currentDrag.dataset.index;
+                const dropZoneIndex = e.target.dataset.index;
+
+                e.target.classList.remove('hovered');
+
+                if (draggedIndex === dropZoneIndex) {
+                    e.target.appendChild(currentDrag);
+                    currentDrag.draggable = false;
+                    correctSound.play();
+                    checkWinCondition();
+                } else {
+                    originalParent.appendChild(currentDrag); // إعادة القطعة لمكانها الأصلي في حالة الإجابة الخاطئة
+                    wrongSound.play();
+                }
+            }
+        });
+
+        // دالة التحقق من الفوز
+        function checkWinCondition() {
+            let allCorrect = true;
+            const dropZones = document.querySelectorAll('#solution-container .drop-zone');
+
+            dropZones.forEach(zone => {
+                if (zone.children.length === 0 || zone.children[0].dataset.index !== zone.dataset.index) {
+                    allCorrect = false;
+                }
+            });
+
+            if (allCorrect) {
+                message.textContent = '🎉 تهانينا! لقد أتممت المهمة بنجاح 🎉';
+                bravooSound.play();
+                showCompleteImage();
+                startBalloons();
+                controlsContainer.classList.add('visible');
+            }
+        }
+
+        // دالة عرض الصورة الكاملة
+        function showCompleteImage() {
+            // إخفاء جميع حاويات القطع
+            document.querySelectorAll('.puzzle-container').forEach(container => {
+                container.classList.add('hidden');
+            });
+            solutionContainer.innerHTML = '';
+            solutionContainer.classList.add('solved');
+            const currentImage = imageOrder[currentImagePosition];
+            solutionContainer.style.backgroundImage = `url(images/photo${currentImage}.png)`;
+        }
+
+        // دالة بدء البالونات
+        function startBalloons() {
+            const numberOfBalloons = 50;
+            for (let i = 0; i < numberOfBalloons; i++) {
+                const balloon = document.createElement('div');
+                balloon.className = 'balloon';
+                balloon.style.left = `${Math.random() * 100}vw`;
+                balloon.style.backgroundColor = getRandomColor();
+                balloon.style.animationDelay = `${Math.random() * 2}s`;
+                balloon.style.animationDuration = `${3 + Math.random() * 3}s`;
+                document.body.appendChild(balloon);
+            }
+        }
+
+        // دالة للحصول على لون عشوائي للبالونات
+        function getRandomColor() {
+            const colors = ['#ff4136', '#ffc107', '#007bff', '#28a745', '#17a2b8', '#6f42c1', '#fd7e14', '#20c997', '#e83e8c'];
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+
+        // دالة إيقاف البالونات
+        function stopBalloons() {
+            document.querySelectorAll('.balloon').forEach(balloon => balloon.remove());
+        }
+
+        // دالة لإعداد ترتيب الصور العشوائي
+        function setupImageOrder() {
+            imageOrder = [];
+            for (let i = START_IMAGE_INDEX; i <= END_IMAGE_INDEX; i++) {
+                imageOrder.push(i);
+            }
+            shuffleArray(imageOrder);
+            currentImagePosition = 0;
+        }
+
+        // معالجة النقر على أيقونات التحكم
+        againIcon.addEventListener('click', () => {
+            currentImagePosition++;
+            if (currentImagePosition >= imageOrder.length) {
+                setupImageOrder();
+            }
+            createPuzzle();
+        });
+
+        homeIcon.addEventListener('click', () => {
+            window.location.href = 'levels.html';
+        });
+
+        // بدء اللعبة عند تحميل الصفحة
+        window.onload = () => {
+            setupImageOrder();
+            createPuzzle();
+        };
+
+
+
+        // تعطيل قائمة السياق عند الضغط على الزر الأيمن
+        document.addEventListener('contextmenu', function (e) {
+            e.preventDefault();
+            console.log('تم تعطيل قائمة السياق في النشاط!');
+        });
+
+
+
+
+
+
+    </script>
+</body>
+
+</html>
