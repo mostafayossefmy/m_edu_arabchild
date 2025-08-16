@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>التعرف على الأرقام</title>
+    <style>
+
+
+        body { 
+            margin: 0; padding: 0; 
+            background: linear-gradient(135deg, #a8edea, #fed6e3);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+        }
+
+
+        .home { position: absolute; top: 20px; left: 20px; cursor: pointer; }
+        .home img { width: 50px; height: 50px; }
+        .display-box { 
+            width: 300px; height: 300px; 
+            background: white; 
+            border: 3px solid black; 
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .display-box img { max-width: 280px; max-height: 280px; border-radius: 15px; }
+        .numbers { 
+            display: grid; 
+            grid-template-columns: repeat(5, 1fr); 
+            gap: 15px; 
+            max-width: 500px;
+        }
+        .number { 
+            width: 60px; height: 60px;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div style="position: absolute; top: 20px; left: 50%; transform: translateX(-50%); font-size: 24px; font-weight: bold; color: #0a06fc;">
+    التعرف على الأرقام
+</div>
+
+    <div class="home" onclick="window.location='activities.html'">
+        <img src="images/home.png">
+    </div>
+    
+    <div class="display-box" id="displayBox"></div>
+    
+    <div class="numbers" id="numbersGrid"></div>
+
+    <script>
+        // إنشاء الأرقام
+        document.addEventListener('DOMContentLoaded', function() {
+            const grid = document.getElementById('numbersGrid');
+            for (let i = 1; i <= 10; i++) {
+                const div = document.createElement('div');
+                div.className = 'number';
+                div.textContent = i;
+                div.onclick = () => showTempImage(i);
+                grid.appendChild(div);
+            }
+        });
+
+        function showTempImage(num) {
+            const box = document.getElementById('displayBox');
+            box.innerHTML = `<img src="images/photo${num}.png">`;
+            
+            // تشغيل الصوت
+            const audio = new Audio(`sounds/nu_${num}.mp3`);
+            audio.play().catch(e => {});
+            
+            // إخفاء الصورة بعد 2 ثانية
+            setTimeout(() => {
+                box.innerHTML = '';
+            }, 2000);
+        }
+    </script>
+
+    <!-- منع النقر بزر الماوس الأيمن -->
+    <script>
+        document.addEventListener('contextmenu', e => e.preventDefault());
+    </script>
+</body>
+</html>
+
